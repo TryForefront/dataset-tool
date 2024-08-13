@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { CopyPlus, ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 
 const DatasetTable = ({ samples }) => (
-  <div className="w-full overflow-x-auto">
+  <div className="w-full h-full overflow-auto px-4">
     <Table className="w-full">
       {/* <TableHeader>
                   <TableRow>

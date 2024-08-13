@@ -22,22 +22,15 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <TooltipProvider>
-          <div className="flex min-h-screen w-full flex-col  ">
-            <div className="flex flex-col sm:gap-4 sm:py-2">
-              <header className="sticky top-0 z-30 flex py-2 justify-between items-center gap-4 border-b  bg-background px-4 sm:static  sm:bg-transparent sm:px-6 ">
+          <div className="flex min-h-screen w-full flex-col">
+            <div className="flex flex-col h-screen">
+              <header className="z-30 flex py-3 justify-between items-center gap-4 border-b bg-background px-4 sm:px-6">
                 <div className="flex items-center gap-2">
-                  {/* <div className="flex items-center gap-2 rounded-lg bg-black h-8 w-8 justify-center">
-                    <ForefrontLogo
-                      height={20}
-                      width={20}
-                      className="text-white"
-                    />
-                  </div> */}
-                  <div className="flex gap-2 items-center  items-end">
-                    <h1 className="flex-1 shrink-0 whitespace-nowrap text-2xl font-semibold tracking-tight sm:grow-0">
+                  <div className="flex gap-2 items-center items-end">
+                    <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
                       Free AI dataset filtering tool
                     </h1>
-                    <div className=" text-gray-700">
+                    <div className="text-gray-700">
                       by{" "}
                       <Link
                         className="text-black font-medium"
@@ -78,7 +71,9 @@ export default function RootLayout({
                 </div>
               </header>
 
-              {children}
+              <div className="flex-1 overflow-auto px-4 py-2 bg-muted">
+                {children}
+              </div>
             </div>
           </div>
         </TooltipProvider>

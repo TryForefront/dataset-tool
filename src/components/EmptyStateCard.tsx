@@ -22,7 +22,7 @@ function EmptyStateCard() {
     // when complete do setSamples with the array
   }
   return (
-    <div className="h-full w-full flex items-center justify-center mt-[10vh]">
+    <div className=" w-full flex items-center justify-center mt-[10vh]">
       <Card className="w-[400px] h-full ">
         <CardHeader>
           <CardTitle>Welcome</CardTitle>
