@@ -50,59 +50,62 @@ export default function App() {
   return (
     <main className="flex  gap-8 flex-col flex-1 p-4 sm:px-6 sm:py-0">
       <div className="flex items-start gap-4 md:gap-8">
-        <div className=" w-full items-start gap-4 md:gap-8 ">
-          <div className="overflow-hidden h-full w-full flex flex-col gap-4">
-            <CardHeader className=" px-0 py-0 flex  flex-row items-start justify-between">
-              <div className="flex flex-col gap-0 p-0">
-                <h2 className="text-xl font-bold">Samples</h2>
-                <CardDescription>Your dataset samples</CardDescription>
-              </div>
-              <div className="ml-auto flex items-center gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-7 gap-1 text-sm"
-                    >
-                      <ListFilter className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only">Filter</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem>All</DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>
-                      Selected
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem checked>
-                      Liked
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>
-                      Disliked
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>
-                      AI Generated
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>None</DropdownMenuCheckboxItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="h-7 gap-1 text-sm"
-                >
-                  <Download className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only">Download</span>
-                </Button>
-              </div>
-            </CardHeader>
-            {samples.length == 0 && <EmptyStateCard />}
+        {samples.length == 0 && <EmptyStateCard />}
 
-            {samples?.length > 0 && <DatasetTable samples={samples} />}
+        {samples?.length > 0 && (
+          <div className=" w-full items-start gap-4 md:gap-8 ">
+            <div className="overflow-hidden h-full w-full flex flex-col gap-4">
+              <CardHeader className=" px-0 py-0 flex  flex-row items-start justify-between">
+                <div className="flex flex-col gap-0 p-0">
+                  <h2 className="text-xl font-bold">Samples</h2>
+                  <CardDescription>Your dataset samples</CardDescription>
+                </div>
+                <div className="ml-auto flex items-center gap-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 gap-1 text-sm"
+                      >
+                        <ListFilter className="h-3.5 w-3.5" />
+                        <span className="sr-only sm:not-sr-only">Filter</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuCheckboxItem>All</DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem>
+                        Selected
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem checked>
+                        Liked
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem>
+                        Disliked
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem>
+                        AI Generated
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem>None</DropdownMenuCheckboxItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 gap-1 text-sm"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    <span className="sr-only sm:not-sr-only">Download</span>
+                  </Button>
+                </div>
+              </CardHeader>
+
+              <DatasetTable samples={samples} />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </main>
   );
