@@ -29,10 +29,10 @@ interface SampleState {
   removeLabelFromSampleById: (sampleId: string, label: string) => void;
 }
 
-import SAMPLE_DATA from "../constants/SAMPLE_DATA";
+// import SAMPLE_DATA from "../constants/SAMPLE_DATA";
 
 const useSampleStore = create<SampleState>((set) => ({
-  samples: SAMPLE_DATA,
+  samples: [],
   setSamples: (samples) => set({ samples }),
   addSample: (sample) =>
     set((state) => ({ samples: [...state.samples, sample] })),

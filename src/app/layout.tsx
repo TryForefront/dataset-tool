@@ -1,26 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import ForefrontLogo from "@/components/ForefrontLogo";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@radix-ui/react-tooltip";
-import {
-  Settings,
-  PanelLeft,
-  File,
-  LineChart,
-  Upload,
-  CircleHelp,
-  Settings2,
-} from "lucide-react";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { Upload, CircleHelp, Settings2 } from "lucide-react";
 import Link from "next/link";
-import { html } from "cheerio";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,9 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <TooltipProvider>
-          <div className="flex min-h-screen w-full flex-col bg-muted/40">
-            <div className="flex flex-col sm:gap-4 sm:py-4">
-              <header className="sticky top-0 z-30 flex h-14 justify-between items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+          <div className="flex min-h-screen w-full flex-col  ">
+            <div className="flex flex-col sm:gap-4 sm:py-2">
+              <header className="sticky top-0 z-30 flex py-2 justify-between items-center gap-4 border-b  bg-background px-4 sm:static  sm:bg-transparent sm:px-6 ">
                 <div className="flex items-center gap-2">
                   {/* <div className="flex items-center gap-2 rounded-lg bg-black h-8 w-8 justify-center">
                     <ForefrontLogo
