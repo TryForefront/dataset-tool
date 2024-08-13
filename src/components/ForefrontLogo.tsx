@@ -1,14 +1,16 @@
 interface ForefrontLogoProps {
   height: number;
   width: number;
+  className?: string;
 }
-const ForefrontLogo = ({ height, width }: ForefrontLogoProps) => (
+const ForefrontLogo = ({ height, width, className }: ForefrontLogoProps) => (
   <svg
     width={width}
     height={height}
     viewBox="0 0 240 240"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    className={className}
   >
     <path
       fill-rule="evenodd"
