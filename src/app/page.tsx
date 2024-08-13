@@ -1,3 +1,4 @@
+"use client";
 import {
   ChevronLeft,
   ChevronRight,
@@ -39,12 +40,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import samples from "@/constants/SAMPLE_DATA";
 import { main } from "bun";
 import DatasetTable from "@/components/DatasetTable";
 import EmptyStateCard from "@/components/EmptyStateCard";
+import { useSampleStore } from "@/store";
 
 export default function App() {
+  const { samples } = useSampleStore();
   return (
     <main className="flex  gap-8 flex-col flex-1 p-4 sm:px-6 sm:py-0">
       <div className="flex items-start gap-4 md:gap-8">
