@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -26,7 +25,7 @@ function EmptyStateCard() {
           <CardDescription>
             {`This is a free tool for filtering AI datasets for fine-tuning
             locally on your machine. To get started, upload a dataset using
-            JSONL format.`}
+            JSONL format. For more on properly formatting your dataset, check https://docs.forefront.ai/features/datasets`}
           </CardDescription>
         </CardHeader>
         <CardContent>
