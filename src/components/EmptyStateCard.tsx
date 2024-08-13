@@ -9,12 +9,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import parseDataset from "@/utils/parseDataset";
 import { useSampleStore } from "@/store";
 function EmptyStateCard() {
   const { setSamples } = useSampleStore();
 
-  function onFileUpload(e) {
-    console.log(e);
+  function onFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      parseDataset(file).then((samples) => setSamples(samples));
+    }
     // when complete do setSamples with the array
   }
   return (

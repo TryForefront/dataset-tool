@@ -1,12 +1,13 @@
 import { Sample } from "@/store/useSampleStore";
 
-export default async function parseDataset(file: File) {
-  const sample: Sample = {
+export default async function parseDataset(file: File): Promise<Sample[]> {
+  const newSample = (): Sample => ({
     id: crypto.randomUUID(),
     messages: [],
     likedStatus: 0,
     labels: [],
-  };
+  });
+  const samples: Sample[] = [];
   const fileReader = new FileReader();
 
   const objects: any[] = await new Promise((resolve) => {
@@ -30,6 +31,7 @@ export default async function parseDataset(file: File) {
   });
 
   for (const object of objects) {
+    const sample = newSample();
     if (object.messages) {
       for (const message of object.messages) {
         if (!!message.role && !!message.content) {
@@ -53,7 +55,10 @@ export default async function parseDataset(file: File) {
         }
       }
     }
+    samples.push(sample);
   }
 
-  return sample;
+  console.log(samples);
+
+  return samples;
 }
