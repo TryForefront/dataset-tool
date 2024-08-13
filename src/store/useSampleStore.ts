@@ -4,20 +4,20 @@ import { get, set, del } from "idb-keyval";
 
 const storage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
-    console.log(name, "has been retrieved");
+    // console.log(name, "has been retrieved");
     return (await get(name)) || null;
   },
   setItem: async (name: string, value: string): Promise<void> => {
-    console.log(name, "with value", value, "has been saved");
+    // console.log(name, "with value", value, "has been saved");
     await set(name, value);
   },
   removeItem: async (name: string): Promise<void> => {
-    console.log(name, "has been deleted");
+    // console.log(name, "has been deleted");
     await del(name);
   },
 };
 
-interface Message {
+export interface Message {
   role: string;
   content: string;
 }
@@ -36,12 +36,26 @@ export interface Sample {
 
 interface SampleState {
   samples: Sample[];
+  setSamples: (samples: Sample[]) => void;
+
+  hoverIndex: number;
+  setHoverIndex: (index: number) => void;
+
+  viewSampleId: string | undefined;
+  setViewSampleId: (sampleId: string | undefined) => void;
+  resetViewSampleId: () => void;
+
   selectedSampleIds?: string[];
   selectSampleId?: (sampleId: string[]) => void;
-  setSamples: (samples: Sample[]) => void;
+
   addSample: (sample: Sample) => void;
   duplicateSampleById: (sampleId: string) => void;
   removeSampleById: (sampleId: string) => void;
+
+  likeSampleById: (sampleId: string) => void;
+  dislikeSampleById: (sampleId: string) => void;
+  resetSampleLikeStatus: (sampleId: string) => void;
+
   addLabelToSampleById: (sampleId: string, label: string) => void;
   removeLabelFromSampleById: (sampleId: string, label: string) => void;
 }
@@ -53,6 +67,14 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
     (set) => ({
       samples: [],
       setSamples: (samples) => set({ samples }),
+
+      hoverIndex: -1,
+      setHoverIndex: (index) => set({ hoverIndex: index }),
+
+      viewSampleId: undefined,
+      setViewSampleId: (sampleId) => set({ viewSampleId: sampleId }),
+      resetViewSampleId: () => set({ viewSampleId: undefined }),
+
       addSample: (sample) =>
         set((state) => ({ samples: [...state.samples, sample] })),
       selectedSampleIds: [],
@@ -76,6 +98,49 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
         set((state) => ({
           samples: state.samples.filter((s) => s.id !== sampleId),
         })),
+      likeSampleById: (sampleId) => {
+        set((state) => {
+          const sample = state.samples.find((s) => s.id === sampleId);
+          if (!sample) return;
+          return {
+            ...state,
+            samples: state.samples.map((s) =>
+              s.id === sampleId ? { ...s, likedStatus: 1 } : s
+            ),
+          };
+        });
+      },
+      dislikeSampleById: (sampleId) =>
+        set((state) => {
+          console.log("DISLIKING ACTION");
+          console.log(sampleId);
+          const sample = state.samples.find((s) => s.id === sampleId);
+          console.log(sample);
+          if (!sample) return;
+          // set({
+          //   samples: state.samples.map((s) =>
+          //     s.id == sampleId ? { ...s, likedStatus: -1 } : s
+          //   ),
+          // });
+          return {
+            ...state,
+            samples: state.samples.map((s) =>
+              s.id === sampleId ? { ...s, likedStatus: -1 } : s
+            ),
+          };
+        }),
+      resetSampleLikeStatus: (sampleId) =>
+        set((state) => {
+          const sample = state.samples.find((s) => s.id === sampleId);
+          if (!sample) return;
+          return {
+            ...state,
+            samples: state.samples.map((s) =>
+              s.id === sampleId ? { ...s, likedStatus: 0 } : s
+            ),
+          };
+        }),
+
       addLabelToSampleById: (sampleId, label) =>
         set((state) => {
           const sample = state.samples.find((s) => s.id === sampleId);

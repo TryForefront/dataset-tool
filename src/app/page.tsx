@@ -14,14 +14,15 @@ import {
 import DatasetTable from "@/components/DatasetTable";
 import EmptyStateCard from "@/components/EmptyStateCard";
 import { useSampleStore } from "@/store";
+import ViewSample from "@/components/ViewSample";
 
 export default function App() {
-  const { samples } = useSampleStore();
+  const { samples, viewSampleId, resetViewSampleId } = useSampleStore();
   return (
     <main className="border rounded-xl bg-background flex h-full gap-8 flex-col flex-1 ">
       <div className="flex h-full items-start gap-4 md:gap-8">
         {samples.length == 0 && <EmptyStateCard />}
-        {samples?.length > 0 && (
+        {!viewSampleId && samples?.length > 0 && (
           <div className="h-full w-full items-start gap-4 md:gap-8 overflow-hidden">
             <CardHeader className=" px-4 sm:px-6 py-2 flex flex-row items-center justify-between border-b">
               <div className="flex flex-col ">
@@ -80,6 +81,7 @@ export default function App() {
             </div>
           </div>
         )}
+        {viewSampleId && <ViewSample />}
       </div>
     </main>
   );
