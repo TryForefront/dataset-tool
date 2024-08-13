@@ -19,7 +19,6 @@ function EmptyStateCard() {
     if (file) {
       parseDataset(file).then((samples) => setSamples(samples));
     }
-    // when complete do setSamples with the array
   }
   return (
     <div className="h-full w-full flex items-center justify-center mt-[10vh]">
