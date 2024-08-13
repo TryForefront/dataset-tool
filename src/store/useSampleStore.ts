@@ -49,6 +49,7 @@ interface SampleState {
   selectSampleId?: (sampleId: string[]) => void;
 
   addSample: (sample: Sample) => void;
+  updateSampleMessages: (sampleId: string, messages: Message[]) => void;
   duplicateSampleById: (sampleId: string) => void;
   removeSampleById: (sampleId: string) => void;
 
@@ -85,6 +86,17 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
             ? currentSelectedIds.filter((id) => id !== sampleId)
             : [...currentSelectedIds, sampleId];
           return { selectedSampleIds: updatedSelectedIds };
+        }),
+      updateSampleMessages: (sampleId, messages) =>
+        set((state) => {
+          const sample = state.samples.find((s) => s.id === sampleId);
+          if (!sample) return;
+          return {
+            ...state,
+            samples: state.samples.map((s) =>
+              s.id === sampleId ? { ...s, messages } : s
+            ),
+          };
         }),
       duplicateSampleById: (sampleId) =>
         set((state) => {

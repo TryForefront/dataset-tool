@@ -6,7 +6,7 @@ import { CopyPlus, ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 import { useSampleStore } from "@/store";
 import { Sample } from "@/store/useSampleStore";
 import useHotkey from "@/hooks/useHotkey";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 const DatasetTable = ({ samples }) => {
   const { hoverIndex, setHoverIndex } = useSampleStore();

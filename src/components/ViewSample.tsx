@@ -1,7 +1,5 @@
 "use client";
 import {
-  ListFilter,
-  Download,
   Edit,
   Sparkles,
   WandSparkles,
@@ -10,17 +8,12 @@ import {
   ChevronDown,
   ChevronUp,
   ArrowLeft,
+  Check,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 import {
   Tooltip,
@@ -32,13 +25,15 @@ import {
 import { CardHeader } from "@/components/ui/card";
 
 import { useSampleStore } from "@/store";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sample, Message } from "@/store/useSampleStore";
 import capitalize from "@/utils/capitalize";
 import useHotkey from "@/hooks/useHotkey";
 
 const ViewSample = () => {
   const [edit, setEdit] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+
   const {
     viewSampleId,
     setViewSampleId,
@@ -46,6 +41,7 @@ const ViewSample = () => {
     likeSampleById,
     dislikeSampleById,
     resetViewSampleId,
+    updateSampleMessages,
     resetSampleLikeStatus,
   } = useSampleStore();
 
@@ -54,7 +50,15 @@ const ViewSample = () => {
     return samples?.find((sample) => sample.id === viewSampleId);
   }, [viewSampleId, samples]);
 
+  useEffect(() => {
+    console.log("current sampl updated");
+    if (currentSample) {
+      setMessages(currentSample.messages);
+    }
+  }, [currentSample]);
+
   function handleIncrementViewSampleId() {
+    setEdit(false);
     const currentIndex = samples.findIndex((s) => s.id === viewSampleId);
     const nextIndex = currentIndex + 1;
     if (nextIndex < samples.length) {
@@ -63,6 +67,7 @@ const ViewSample = () => {
   }
 
   function handleDecrementViewSampleId() {
+    setEdit(false);
     const currentIndex = samples.findIndex((s) => s.id === viewSampleId);
     const nextIndex = currentIndex - 1;
     if (nextIndex >= 0) {
@@ -92,13 +97,38 @@ const ViewSample = () => {
     }
   }
 
+  const handleMessageChange = useCallback(
+    (index: number, newContent: string) => {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg, i) =>
+          i === index ? { ...msg, content: newContent } : msg
+        )
+      );
+    },
+    []
+  );
+
+  function handleCancel() {
+    const originalMessage = samples.find(
+      (s) => s.id === viewSampleId
+    )?.messages;
+    setMessages([...originalMessage] || []);
+    setEdit(false);
+  }
+
+  function handleSave() {
+    updateSampleMessages(currentSample?.id || "", messages);
+    setEdit(false);
+  }
+
   useHotkey("Escape", resetViewSampleId);
-  useHotkey("j", handleDecrementViewSampleId);
-  useHotkey("k", handleIncrementViewSampleId);
-  useHotkey("ArrowDown", handleDecrementViewSampleId);
-  useHotkey("ArrowUp", handleIncrementViewSampleId);
-  useHotkey("l", handleLike);
-  useHotkey("h", handleDislike);
+  useHotkey("e", () => !edit && setEdit(!edit));
+  useHotkey("j", () => !edit && handleDecrementViewSampleId());
+  useHotkey("k", () => !edit && handleIncrementViewSampleId());
+  useHotkey("ArrowDown", () => !edit && handleDecrementViewSampleId());
+  useHotkey("ArrowUp", () => !edit && handleIncrementViewSampleId());
+  useHotkey("l", () => !edit && handleLike());
+  useHotkey("h", () => !edit && handleDislike());
 
   return (
     <div className="h-full w-full items-start gap-4 md:gap-8 overflow-hidden">
@@ -186,15 +216,38 @@ const ViewSample = () => {
               </TooltipContent>
             </Tooltip>
           </div>
-          <Button
-            onClick={() => setEdit(!edit)}
-            size="sm"
-            variant="outline"
-            className="h-7 gap-1 text-sm"
-          >
-            <Edit className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only">Edit</span>
-          </Button>
+          {edit ? (
+            <>
+              <Button
+                onClick={handleCancel}
+                size="sm"
+                variant="outline"
+                className="h-7 gap-1 text-sm text-red-500 border-red-500 hover:bg-red-50"
+              >
+                <X className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only">Cancel</span>
+              </Button>
+              <Button
+                onClick={handleSave}
+                size="sm"
+                variant="outline"
+                className="h-7 gap-1 text-sm text-green-500 border-green-500 hover:bg-green-50"
+              >
+                <Check className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only">Save</span>
+              </Button>
+            </>
+          ) : (
+            <Button
+              onClick={() => setEdit(true)}
+              size="sm"
+              variant="outline"
+              className="h-7 gap-1 text-sm"
+            >
+              <Edit className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only">Edit</span>
+            </Button>
+          )}
           <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
             <WandSparkles className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only">Rewrite with AI</span>
@@ -212,32 +265,33 @@ const ViewSample = () => {
         <div className="w-full h-full overflow-auto px-4 pb-24">
           <Table className="w-full">
             <TableBody>
-              {currentSample?.messages?.map(
-                (message: Message, index: number) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium text-muted-foreground font-light p-2 py-4 w-[120px] align-top whitespace-nowrap">
-                      {capitalize(message.role)}
-                    </TableCell>
-                    <TableCell className="py-4">
-                      {edit ? (
-                        <textarea
-                          className="w-full h-auto p-2 border rounded"
-                          value={message.content}
-                          readOnly
-                          style={{ height: "auto", minHeight: "100px" }}
-                          onFocus={(e) =>
-                            (e.target.style.height = `${e.target.scrollHeight}px`)
-                          }
-                        />
-                      ) : (
-                        <div className="flex gap-1 flex-wrap align-top whitespace-pre-line">
-                          {message.content}
-                        </div>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                )
-              )}
+              {messages?.map((message: Message, index: number) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium text-muted-foreground font-light p-2 py-4 w-[120px] align-top whitespace-nowrap">
+                    {capitalize(message.role)}
+                  </TableCell>
+                  <TableCell className="py-4">
+                    {edit ? (
+                      <textarea
+                        className="w-full h-auto p-2 border rounded"
+                        value={message.content}
+                        style={{ height: "auto", minHeight: "100px" }}
+                        onFocus={(e) =>
+                          (e.target.style.height = `${e.target.scrollHeight}px`)
+                        }
+                        onChange={(e) => {
+                          e.preventDefault();
+                          handleMessageChange(index, e.target.value);
+                        }}
+                      />
+                    ) : (
+                      <div className="flex gap-1 flex-wrap align-top whitespace-pre-line">
+                        {message.content}
+                      </div>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
