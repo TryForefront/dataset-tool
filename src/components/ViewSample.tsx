@@ -57,7 +57,6 @@ const ViewSample = () => {
   }, [viewSampleId, samples]);
 
   useEffect(() => {
-    console.log("current sampl updated");
     if (currentSample) {
       setMessages(currentSample?.messages || []);
     }
