@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
@@ -31,7 +32,9 @@ import capitalize from "@/utils/capitalize";
 import useHotkey from "@/hooks/useHotkey";
 import generateSimilarSample from "@/utils/generateSimilarSample";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
-import ConfigureAIDialog from "./dialogs/ConfigureAIDialog";
+import ConfigureAIDialog from "./dialogs/GenerateMoreDialog";
+import RewriteDialog from "./dialogs/RewriteDialog";
+import GenerateMoreDialog from "./dialogs/GenerateMoreDialog";
 
 const ViewSample = () => {
   const [edit, setEdit] = useState(false);
@@ -155,7 +158,9 @@ const ViewSample = () => {
                 </TooltipContent>
               </Tooltip>
 
-              <h2 className="text-base font-medium">Sample #1</h2>
+              <h2 className="text-base font-medium">
+                Sample {samples?.findIndex((s) => s?.id === viewSampleId) + 1}
+              </h2>
             </div>
             <div className="flex gap-3">
               <Tooltip>
@@ -188,6 +193,13 @@ const ViewSample = () => {
                   <p>Mark sample as liked</p>
                 </TooltipContent>
               </Tooltip>
+              <div className="flex gap-1 flex-wrap">
+                {currentSample?.labels?.map((label, index) => (
+                  <Badge key={index} variant="outline" className="text-xs">
+                    {label}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -258,10 +270,16 @@ const ViewSample = () => {
               <span className="sr-only sm:not-sr-only">Edit</span>
             </Button>
           )}
-          <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
-            <WandSparkles className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only">Rewrite with AI</span>
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
+                <WandSparkles className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only">Rewrite with AI</span>
+              </Button>
+            </DialogTrigger>
+            <RewriteDialog />
+          </Dialog>
+
           <Dialog>
             <DialogTrigger asChild>
               <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
@@ -271,7 +289,7 @@ const ViewSample = () => {
                 </span>
               </Button>
             </DialogTrigger>
-            <ConfigureAIDialog />
+            <GenerateMoreDialog />
           </Dialog>
         </div>
       </CardHeader>

@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import UploadDialog from "@/components/UploadDialog";
+import UploadDialog from "@/components/dialogs/UploadDialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ConfigureAIDialog from "@/components/dialogs/ConfigureAIDialog";

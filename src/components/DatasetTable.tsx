@@ -120,7 +120,7 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
                 <Checkbox />
               </TableCell>
               <TableCell className="font-medium p-2 w-[100px] whitespace-nowrap">
-                Sample {index}
+                Sample {index + 1}
               </TableCell>
               <TableCell className="p-2">
                 <div className="flex gap-1 flex-wrap">
