@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import UploadDialog from "@/components/UploadDialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ConfigureAIDialog from "@/components/dialogs/ConfigureAIDialog";
@@ -64,16 +65,22 @@ export default function RootLayout({
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-7 gap-1 text-sm"
-                    >
-                      <Upload className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only">
-                        Upload dataset
-                      </span>
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 gap-1 text-sm"
+                        >
+                          <Upload className="h-3.5 w-3.5" />
+                          <span className="sr-only sm:not-sr-only">
+                            Upload dataset
+                          </span>
+                        </Button>
+                      </DialogTrigger>
+                      <UploadDialog />
+                    </Dialog>
+
                     <Button
                       size="sm"
                       variant="outline"
