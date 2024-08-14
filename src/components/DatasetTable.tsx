@@ -2,7 +2,7 @@ import React, { useRef, useCallback, useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { CopyPlus, ThumbsDown, ThumbsUp, Trash } from "lucide-react";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { useSampleStore } from "@/store";
 import { Sample } from "@/store/useSampleStore";
 import useHotkey from "@/hooks/useHotkey";
@@ -18,6 +18,11 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
   const containerRef = useRef(null);
   const observerRef = useRef(null);
   const rowRefs = useRef({});
+
+  useEffect(() => {
+    setDisplayedSamples(initialSamples.slice(0, BATCH_SIZE));
+    setCurrentIndex(BATCH_SIZE);
+  }, [initialSamples]);
 
   const loadMoreItems = useCallback(() => {
     if (currentIndex >= initialSamples.length) return;
