@@ -17,8 +17,9 @@ import capitalize from "@/utils/capitalize";
 import AIConfigPage from "./AIConfigPage";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "@/components/ui/input";
+import useHotkey from "@/hooks/useHotkey";
 
-const RewriteDialog = () => {
+const RewriteDialog = ({ open }) => {
   const { provider, baseUrl, apiKeys, modelString } = useAIStore();
 
   const { samples, viewSampleId, addSample, updateSampleMessages } =
@@ -62,11 +63,26 @@ const RewriteDialog = () => {
       setIsGenerating(false);
       setResult(newSample);
     } catch (e) {
+      setIsGenerating(false);
       setError(
         "Something went wrong. Please try again later or use a different model."
       );
     }
   }
+
+  useHotkey("Enter", () => {
+    if (!open) return;
+    if (page == 0 && provider && baseUrl && apiKeys[provider] && modelString) {
+      setPage(1);
+    }
+  });
+
+  useHotkey("Enter", (event) => {
+    if (!open || !event.metaKey) return;
+    if (page == 1 && rewriteInput) {
+      handleRewrite();
+    }
+  });
 
   return (
     <DialogContent className={`  sm:max-w-[${page === 0 ? "325px" : "600px"}]`}>
@@ -88,7 +104,10 @@ const RewriteDialog = () => {
                 <textarea
                   id="rewriteInput"
                   value={rewriteInput}
-                  onChange={(e) => setRewriteInput(e.target.value)}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setRewriteInput(e.target.value);
+                  }}
                   className="w-full h-32 p-2 border rounded-lg resize-none"
                 />
               </div>
@@ -180,7 +199,8 @@ const RewriteDialog = () => {
                 !baseUrl ||
                 !apiKeys[provider] ||
                 !modelString ||
-                isGenerating
+                isGenerating ||
+                !rewriteInput
               }
               onClick={() => {
                 setIsGenerating(true);
@@ -188,8 +208,12 @@ const RewriteDialog = () => {
                 handleRewrite();
               }}
               type="button"
+              className="flex  items-center gap-2"
             >
-              {result ? "Try again" : "Generate"}
+              <span>{result ? "Try again" : "Generate"}</span>
+              {/* <kbd className="px-1 py-[0.5] text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">
+                ⌘ Enter
+              </kbd> */}
             </Button>
           </div>
         </DialogFooter>

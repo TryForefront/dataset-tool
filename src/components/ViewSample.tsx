@@ -30,9 +30,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sample, Message } from "@/store/useSampleStore";
 import capitalize from "@/utils/capitalize";
 import useHotkey from "@/hooks/useHotkey";
-import generateSimilarSample from "@/utils/generateSimilarSample";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
-import ConfigureAIDialog from "./dialogs/GenerateMoreDialog";
 import RewriteDialog from "./dialogs/RewriteDialog";
 import GenerateMoreDialog from "./dialogs/GenerateMoreDialog";
 
@@ -51,8 +49,6 @@ const ViewSample = () => {
     resetSampleLikeStatus,
     addSample,
   } = useSampleStore();
-
-  const { baseUrl, apiKeys, modelString, provider } = useAIStore();
 
   const currentSample: any = useMemo(() => {
     if (!samples) return {};
@@ -131,14 +127,71 @@ const ViewSample = () => {
     setEdit(false);
   }
 
-  useHotkey("Escape", resetViewSampleId);
-  useHotkey("e", () => !edit && setEdit(!edit));
-  useHotkey("j", () => !edit && handleDecrementViewSampleId());
-  useHotkey("k", () => !edit && handleIncrementViewSampleId());
-  useHotkey("ArrowDown", () => !edit && handleDecrementViewSampleId());
-  useHotkey("ArrowUp", () => !edit && handleIncrementViewSampleId());
-  useHotkey("l", () => !edit && handleLike());
-  useHotkey("h", () => !edit && handleDislike());
+  const [generateOpen, setGenerateOpen] = useState(false);
+  const [rewriteOpen, setRewriteOpen] = useState(false);
+  const [bothModalsClosed, setBothModalsClosed] = useState(true);
+
+  useEffect(() => {
+    console.log("Checking if both modals are closed");
+    const timer = setTimeout(() => {
+      if (!generateOpen && !rewriteOpen) {
+        setBothModalsClosed(true);
+      } else {
+        setBothModalsClosed(false);
+      }
+    }, 10);
+
+    return () => clearTimeout(timer);
+  }, [generateOpen, rewriteOpen]);
+
+  const closeDialog = useCallback(() => {
+    setGenerateOpen(false);
+    setRewriteOpen(false);
+  }, []);
+
+  const handleEscapeKey = useCallback(
+    (event) => {
+      console.log(event.key, bothModalsClosed);
+      if (event.key == "Escape") {
+        if (bothModalsClosed) {
+          resetViewSampleId();
+        }
+      }
+    },
+    [bothModalsClosed]
+  );
+
+  const handleOpenChange = (open, setOpenFunction) => {
+    setOpenFunction(open);
+    if (!open) {
+      console.log("Dialog was closed");
+      // You can perform any additional actions here when the dialog is closed
+    }
+  };
+
+  useHotkey("Escape", handleEscapeKey);
+  useHotkey("e", () => !edit && bothModalsClosed && setEdit(!edit));
+  useHotkey(
+    "j",
+    () => !edit && bothModalsClosed && handleDecrementViewSampleId()
+  );
+  useHotkey(
+    "k",
+    () => !edit && bothModalsClosed && handleIncrementViewSampleId()
+  );
+  useHotkey(
+    "ArrowDown",
+    () => !edit && bothModalsClosed && handleDecrementViewSampleId()
+  );
+  useHotkey(
+    "ArrowUp",
+    () => !edit && bothModalsClosed && handleIncrementViewSampleId()
+  );
+  useHotkey("l", () => !edit && bothModalsClosed && handleLike());
+  useHotkey("h", () => !edit && bothModalsClosed && handleDislike());
+
+  useHotkey("g", () => setGenerateOpen(true));
+  useHotkey("r", () => setRewriteOpen(true));
 
   return (
     <div className="h-full w-full items-start gap-4 md:gap-8 overflow-hidden">
@@ -270,17 +323,23 @@ const ViewSample = () => {
               <span className="sr-only sm:not-sr-only">Edit</span>
             </Button>
           )}
-          <Dialog>
+          <Dialog
+            open={rewriteOpen}
+            onOpenChange={(open) => handleOpenChange(open, setRewriteOpen)}
+          >
             <DialogTrigger asChild>
               <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
                 <WandSparkles className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only">Rewrite with AI</span>
               </Button>
             </DialogTrigger>
-            <RewriteDialog />
+            <RewriteDialog open={rewriteOpen} />
           </Dialog>
 
-          <Dialog>
+          <Dialog
+            open={generateOpen}
+            onOpenChange={(open) => handleOpenChange(open, setGenerateOpen)}
+          >
             <DialogTrigger asChild>
               <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
                 <Sparkles className="h-3.5 w-3.5" />
@@ -289,7 +348,7 @@ const ViewSample = () => {
                 </span>
               </Button>
             </DialogTrigger>
-            <GenerateMoreDialog />
+            <GenerateMoreDialog open={generateOpen} />
           </Dialog>
         </div>
       </CardHeader>

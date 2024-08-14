@@ -17,10 +17,10 @@ import { useEffect, useState } from "react";
 import { Message, Sample } from "@/store/useSampleStore";
 import generateSimilarSample from "@/utils/generateSimilarSample";
 import capitalize from "@/utils/capitalize";
-import page from "@/app/page";
 import AIConfigPage from "./AIConfigPage";
+import useHotkey from "@/hooks/useHotkey";
 
-const GenerateMoreDialog = () => {
+const GenerateMoreDialog = ({ open }) => {
   const {
     provider,
     baseUrl,
@@ -81,6 +81,7 @@ const GenerateMoreDialog = () => {
       setIsGenerating(false);
       setResult(newSample);
     } catch (e) {
+      setIsGenerating(false);
       setError(
         "Something went wrong. Please try again later or use a different model."
       );
@@ -94,6 +95,17 @@ const GenerateMoreDialog = () => {
         .catch(() => setIsGenerating(false));
     }
   }, [page]);
+
+  useHotkey("Enter", () => {
+    if (!open) return;
+    if (page == 0 && provider && baseUrl && apiKeys[provider] && modelString) {
+      setPage(1);
+    } else if (page == 1) {
+      if (result) {
+        generateSimilar();
+      }
+    }
+  });
 
   return (
     <DialogContent className={`  sm:max-w-[${page === 0 ? "325px" : "600px"}]`}>
@@ -204,8 +216,9 @@ const GenerateMoreDialog = () => {
                 generateSimilar();
               }}
               type="button"
+              className="flex flex-col items-center gap-0 "
             >
-              Try again
+              <span>{result ? "Try again" : "Generate"}</span>
             </Button>
           </div>
         </DialogFooter>

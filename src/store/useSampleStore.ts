@@ -62,6 +62,8 @@ interface SampleState {
 
   // addLabelToSampleById: (sampleId: string, label: string) => void;
   // removeLabelFromSampleById: (sampleId: string, label: string) => void;
+  showHotkeys: boolean;
+  toggleHotkeys: () => void;
 }
 
 // import SAMPLE_DATA from "../constants/SAMPLE_DATA";
@@ -187,6 +189,9 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
       //       ),
       //     });
       //   }),
+      showHotkeys: false,
+      toggleHotkeys: () =>
+        set((state) => ({ showHotkeys: !state.showHotkeys })),
     }),
     {
       name: "samples",

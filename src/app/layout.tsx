@@ -21,7 +21,8 @@ import {
 import UploadDialog from "@/components/dialogs/UploadDialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import ConfigureAIDialog from "@/components/dialogs/ConfigureAIDialog";
+import HotkeysBox from "@/components/HotkeysBox";
+import HotkeysButton from "@/components/HotkeysButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +46,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
+            <HotkeysBox />
             <div className="flex min-h-screen w-full flex-col">
               <div className="flex flex-col h-screen">
                 <header className="z-30 flex py-3 justify-between items-center gap-4 border-b bg-background px-4 sm:px-6">
@@ -81,15 +83,7 @@ export default function RootLayout({
                       <UploadDialog />
                     </Dialog>
 
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-7 gap-1 text-sm"
-                    >
-                      <CircleHelp className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only">Hotkeys</span>
-                    </Button>
-
+                    <HotkeysButton />
                     <ModeToggle />
                   </div>
                 </header>
