@@ -221,14 +221,21 @@ const ViewSample = () => {
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <Checkbox
-                checked={selectedSampleIds?.includes(currentSample.id)}
-                onCheckedChange={(e) => {
-                  console.log("click");
+              <Tooltip>
+                <TooltipTrigger>
+                  <Checkbox
+                    checked={selectedSampleIds?.includes(currentSample.id)}
+                    onCheckedChange={(e) => {
+                      console.log("click");
 
-                  selectSampleId(currentSample.id as string);
-                }}
-              />
+                      selectSampleId(currentSample.id as string);
+                    }}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Toggle selection</p>
+                </TooltipContent>
+              </Tooltip>
 
               <h2 className="text-base font-medium">
                 Sample {samples?.findIndex((s) => s?.id === viewSampleId) + 1}
