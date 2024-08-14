@@ -24,7 +24,6 @@ import {
 
 import { CardHeader } from "@/components/ui/card";
 
-
 import { useAIStore, useSampleStore } from "@/store";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sample, Message } from "@/store/useSampleStore";
@@ -227,7 +226,7 @@ const ViewSample = () => {
                 onClick={handleCancel}
                 size="sm"
                 variant="outline"
-                className="h-7 gap-1 text-sm text-red-500 border-red-500 hover:bg-red-50"
+                className="h-7 gap-1 text-sm text-red-500 border-red-500 hover:bg-muted"
               >
                 <X className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only">Cancel</span>
@@ -236,7 +235,7 @@ const ViewSample = () => {
                 onClick={handleSave}
                 size="sm"
                 variant="outline"
-                className="h-7 gap-1 text-sm text-green-500 border-green-500 hover:bg-green-50"
+                className="h-7 gap-1 text-sm text-green-500 border-green-500 hover:bg-muted"
               >
                 <Check className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only">Save</span>

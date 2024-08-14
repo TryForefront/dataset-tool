@@ -70,7 +70,7 @@ const DatasetTable = ({ samples }) => {
               onClick={() => setViewSampleId(sample.id)}
               onMouseOver={() => setHoverIndex(index)}
               key={sample.id}
-              className={`${hoverIndex === index ? "bg-gray-100" : ""}`}
+              className={`${hoverIndex === index ? "bg-muted" : ""}`}
             >
               <TableCell className="p-2 w-[40px] ">
                 <Checkbox />

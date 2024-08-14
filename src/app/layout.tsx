@@ -7,6 +7,7 @@ import { Upload, CircleHelp, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/ThemeToggle";
+import { useTheme } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,11 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
@@ -38,10 +39,10 @@ export default function RootLayout({
                       <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
                         Free AI dataset filtering tool
                       </h1>
-                      <div className="text-gray-700">
+                      <div className="text-muted-foreground">
                         by{" "}
                         <Link
-                          className="text-black font-medium"
+                          className="text-foreground font-medium"
                           href="https://forefront.ai"
                         >
                           Forefront AI
