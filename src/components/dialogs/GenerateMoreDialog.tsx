@@ -20,7 +20,7 @@ import capitalize from "@/utils/capitalize";
 import AIConfigPage from "./AIConfigPage";
 import useHotkey from "@/hooks/useHotkey";
 
-const GenerateMoreDialog = ({ open }) => {
+const GenerateMoreDialog = ({ open }: { open: boolean }) => {
   const {
     provider,
     baseUrl,

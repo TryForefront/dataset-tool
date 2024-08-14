@@ -18,8 +18,9 @@ import AIConfigPage from "./AIConfigPage";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "@/components/ui/input";
 import useHotkey from "@/hooks/useHotkey";
+import generateSimilarSample from "@/utils/generateSimilarSample";
 
-const RewriteDialog = ({ open }) => {
+const RewriteDialog = ({ open }: { open: boolean }) => {
   const { provider, baseUrl, apiKeys, modelString } = useAIStore();
 
   const { samples, viewSampleId, addSample, updateSampleMessages } =
@@ -49,14 +50,15 @@ const RewriteDialog = ({ open }) => {
       const currentSample = samples?.find((s) => s.id === viewSampleId);
       console.log(currentSample);
       if (!currentSample) return;
-      // const newSample = await generateSimilarSample(
-      //   provider,
-      //   currentSample as Sample,
-      //   baseUrl,
-      //   modelString,
-      //   0.7,
-      //   apiKeys[provider]
-      // );
+      const newSample = await generateSimilarSample(
+        provider,
+        currentSample as Sample,
+        baseUrl,
+        modelString,
+        0.7,
+        apiKeys[provider]
+      );
+      if (!newSample) return;
       if (newSample) {
         setResult(newSample);
       }
@@ -77,7 +79,7 @@ const RewriteDialog = ({ open }) => {
     }
   });
 
-  useHotkey("Enter", (event) => {
+  useHotkey("Enter", (event: any) => {
     if (!open || !event.metaKey) return;
     if (page == 1 && rewriteInput) {
       handleRewrite();

@@ -33,6 +33,7 @@ import useHotkey from "@/hooks/useHotkey";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import RewriteDialog from "./dialogs/RewriteDialog";
 import GenerateMoreDialog from "./dialogs/GenerateMoreDialog";
+import { Function } from "ai";
 
 const ViewSample = () => {
   const [edit, setEdit] = useState(false);
@@ -150,7 +151,7 @@ const ViewSample = () => {
   }, []);
 
   const handleEscapeKey = useCallback(
-    (event) => {
+    (event: any) => {
       console.log(event.key, bothModalsClosed);
       if (event.key == "Escape") {
         if (bothModalsClosed) {
@@ -161,7 +162,7 @@ const ViewSample = () => {
     [bothModalsClosed]
   );
 
-  const handleOpenChange = (open, setOpenFunction) => {
+  const handleOpenChange = (open: boolean, setOpenFunction: any) => {
     setOpenFunction(open);
     if (!open) {
       console.log("Dialog was closed");
@@ -247,7 +248,7 @@ const ViewSample = () => {
                 </TooltipContent>
               </Tooltip>
               <div className="flex gap-1 flex-wrap">
-                {currentSample?.labels?.map((label, index) => (
+                {currentSample?.labels?.map((label: string, index: number) => (
                   <Badge key={index} variant="outline" className="text-xs">
                     {label}
                   </Badge>
