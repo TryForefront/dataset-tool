@@ -1,22 +1,64 @@
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-
 import { CopyPlus, ThumbsDown, ThumbsUp, Trash } from "lucide-react";
 import { useSampleStore } from "@/store";
 import { Sample } from "@/store/useSampleStore";
 import useHotkey from "@/hooks/useHotkey";
-import { useRef } from "react";
 
-const DatasetTable = ({ samples }: { samples: Sample[] }) => {
-  const { hoverIndex, setHoverIndex } = useSampleStore();
+const BATCH_SIZE = 20; // Number of items to load at a time
+
+const DatasetTable = ({ samples: initialSamples }: any) => {
+  const [displayedSamples, setDisplayedSamples] = useState(
+    initialSamples.slice(0, BATCH_SIZE)
+  );
+  const [currentIndex, setCurrentIndex] = useState(BATCH_SIZE);
+  const { hoverIndex, setHoverIndex, setViewSampleId } = useSampleStore();
+  const containerRef = useRef(null);
+  const observerRef = useRef(null);
+  const rowRefs = useRef({});
+
+  const loadMoreItems = useCallback(() => {
+    if (currentIndex >= initialSamples.length) return;
+
+    const nextBatch = initialSamples.slice(
+      currentIndex,
+      currentIndex + BATCH_SIZE
+    );
+    setDisplayedSamples((prevSamples) => [...prevSamples, ...nextBatch]);
+    setCurrentIndex((prevIndex) => prevIndex + BATCH_SIZE);
+  }, [currentIndex, initialSamples]);
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: "100px",
+      threshold: 0.1,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        loadMoreItems();
+      }
+    }, options);
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, [loadMoreItems]);
 
   useHotkey("Enter", () => {
-    if (hoverIndex > -1) {
-      setViewSampleId(samples[hoverIndex].id);
+    if (hoverIndex > -1 && displayedSamples[hoverIndex]) {
+      setViewSampleId(displayedSamples[hoverIndex].id);
     }
   });
-  const rowRefs: any = useRef([]);
 
   const scrollToIndex = (index: number) => {
     if (rowRefs.current[index]) {
@@ -28,7 +70,7 @@ const DatasetTable = ({ samples }: { samples: Sample[] }) => {
   };
 
   useHotkey("j", () => {
-    if (hoverIndex < samples.length - 1) {
+    if (hoverIndex < displayedSamples.length - 1) {
       const newIndex = hoverIndex + 1;
       setHoverIndex(newIndex);
       scrollToIndex(newIndex);
@@ -36,7 +78,7 @@ const DatasetTable = ({ samples }: { samples: Sample[] }) => {
   });
 
   useHotkey("ArrowDown", () => {
-    if (hoverIndex < samples.length - 1) {
+    if (hoverIndex < displayedSamples.length - 1) {
       const newIndex = hoverIndex + 1;
       setHoverIndex(newIndex);
       scrollToIndex(newIndex);
@@ -59,12 +101,11 @@ const DatasetTable = ({ samples }: { samples: Sample[] }) => {
     }
   });
 
-  const { setViewSampleId } = useSampleStore();
   return (
-    <div className="w-full h-full overflow-auto px-4 pb-24">
+    <div ref={containerRef} className="w-full h-full overflow-auto px-4 pb-24">
       <Table className="w-full">
         <TableBody>
-          {samples.map((sample: Sample, index: number) => (
+          {displayedSamples.map((sample: Sample, index: number) => (
             <TableRow
               ref={(el: any) => (rowRefs.current[index] = el)}
               onClick={() => setViewSampleId(sample.id)}
@@ -111,6 +152,7 @@ const DatasetTable = ({ samples }: { samples: Sample[] }) => {
           ))}
         </TableBody>
       </Table>
+      <div ref={observerRef} style={{ height: "1px" }} />
     </div>
   );
 };
