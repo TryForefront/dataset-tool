@@ -30,6 +30,8 @@ import { Sample, Message } from "@/store/useSampleStore";
 import capitalize from "@/utils/capitalize";
 import useHotkey from "@/hooks/useHotkey";
 import generateSimilarSample from "@/utils/generateSimilarSample";
+import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import ConfigureAIDialog from "./dialogs/ConfigureAIDialog";
 
 const ViewSample = () => {
   const [edit, setEdit] = useState(false);
@@ -51,7 +53,7 @@ const ViewSample = () => {
 
   const currentSample: any = useMemo(() => {
     if (!samples) return {};
-    return samples?.find((sample) => sample.id === viewSampleId);
+    return samples?.find((sample) => sample?.id === viewSampleId);
   }, [viewSampleId, samples]);
 
   useEffect(() => {
@@ -63,19 +65,19 @@ const ViewSample = () => {
 
   function handleIncrementViewSampleId() {
     setEdit(false);
-    const currentIndex = samples.findIndex((s) => s.id === viewSampleId);
+    const currentIndex = samples?.findIndex((s) => s?.id === viewSampleId);
     const nextIndex = currentIndex + 1;
     if (nextIndex < samples.length) {
-      setViewSampleId(samples[nextIndex].id);
+      setViewSampleId(samples[nextIndex]?.id);
     }
   }
 
   function handleDecrementViewSampleId() {
     setEdit(false);
-    const currentIndex = samples.findIndex((s) => s.id === viewSampleId);
+    const currentIndex = samples?.findIndex((s) => s?.id === viewSampleId);
     const nextIndex = currentIndex - 1;
     if (nextIndex >= 0) {
-      setViewSampleId(samples[nextIndex].id);
+      setViewSampleId(samples[nextIndex]?.id);
     }
   }
 
@@ -83,9 +85,9 @@ const ViewSample = () => {
     if (currentSample) {
       console.log(currentSample);
       if (currentSample.likedStatus === -1) {
-        resetSampleLikeStatus(currentSample.id);
+        resetSampleLikeStatus(currentSample?.id);
       } else {
-        dislikeSampleById(currentSample.id);
+        dislikeSampleById(currentSample?.id);
       }
     }
   }
@@ -94,9 +96,9 @@ const ViewSample = () => {
     if (currentSample) {
       console.log(currentSample);
       if (currentSample.likedStatus === 1) {
-        resetSampleLikeStatus(currentSample.id);
+        resetSampleLikeStatus(currentSample?.id);
       } else {
-        likeSampleById(currentSample.id);
+        likeSampleById(currentSample?.id);
       }
     }
   }
@@ -194,9 +196,12 @@ const ViewSample = () => {
           <div className="flex items-center gap-2 mr-4 select-none">
             <span className="text-sm pointer-events-none">
               <span className="text-foreground">
-                {samples?.findIndex((s) => s.id === viewSampleId) + 1}
+                {samples?.findIndex((s) => s?.id === viewSampleId) + 1}
               </span>
-              <span className="text-muted-foreground"> / {samples.length}</span>
+              <span className="text-muted-foreground">
+                {" "}
+                / {samples?.length}
+              </span>
             </span>
 
             <Tooltip>
@@ -258,28 +263,17 @@ const ViewSample = () => {
             <WandSparkles className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only">Rewrite with AI</span>
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-7 gap-1 text-sm"
-            onClick={async () => {
-              const newSample = await generateSimilarSample(
-                provider,
-                currentSample! as Sample,
-                baseUrl,
-                modelString,
-                0.7,
-                apiKeys[provider]
-              );
-
-              addSample(newSample);
-            }}
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only">
-              Generate more like this
-            </span>
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
+                <Sparkles className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only">
+                  Generate more like this
+                </span>
+              </Button>
+            </DialogTrigger>
+            <ConfigureAIDialog />
+          </Dialog>
         </div>
       </CardHeader>
 

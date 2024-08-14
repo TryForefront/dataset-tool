@@ -16,7 +16,9 @@ const providers = [
       "gpt-4o-mini",
       "gpt-4-turbo",
     ],
+    recommended: ["gpt-4o-2024-08-06", "gpt-4"],
   },
+  // doesn't work in browser, need proxy: https://github.com/anthropics/anthropic-sdk-typescript/issues/219
   //   {
   //     key: "anthropic",
   //     name: "Anthropic",
@@ -53,16 +55,17 @@ const providers = [
     models: [
       //   "llama-3.1-405b-reasoning",
       "llama-3.1-70b-versatile",
-      "llama-3.1-8b-instant",
+      "llama3-70b-8192",
       "llama3-groq-70b-8192-tool-use-preview",
+      "llama-3.1-8b-instant",
       "llama3-groq-8b-8192-tool-use-preview",
       "llama-guard-3-8b",
-      "llama3-70b-8192",
       "llama3-8b-8192",
       "mixtral-8x7b-32768",
       "gemma-7b-it",
       "gemma2-9b-it",
     ],
+    recommended: ["llama-3.1-70b-versatile", "llama3-70b-8192"],
   },
   {
     key: "fireworks",

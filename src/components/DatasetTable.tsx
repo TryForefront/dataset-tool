@@ -108,12 +108,12 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
     <div ref={containerRef} className="w-full h-full overflow-auto px-4 pb-24">
       <Table className="w-full">
         <TableBody>
-          {displayedSamples.map((sample: Sample, index: number) => (
+          {displayedSamples?.map((sample: Sample, index: number) => (
             <TableRow
               ref={(el: any) => (rowRefs.current[index] = el)}
-              onClick={() => setViewSampleId(sample.id)}
+              onClick={() => setViewSampleId(sample?.id)}
               onMouseOver={() => setHoverIndex(index)}
-              key={sample.id}
+              key={sample?.id}
               className={`${hoverIndex === index ? "bg-muted" : ""}`}
             >
               <TableCell className="p-2 w-[40px] ">
@@ -124,7 +124,7 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
               </TableCell>
               <TableCell className="p-2">
                 <div className="flex gap-1 flex-wrap">
-                  {sample.labels.map((label, index) => (
+                  {sample?.labels?.map((label, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
                       {label}
                     </Badge>
@@ -135,14 +135,14 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
                 <div className="flex justify-end space-x-1 gap-1">
                   <ThumbsDown
                     className={`h-4 w-4 pointer-events-none ${
-                      sample.likedStatus === -1
+                      sample?.likedStatus === -1
                         ? "text-red-400"
                         : "text-muted-foreground"
                     }`}
                   />
                   <ThumbsUp
                     className={`h-4 w-4 pointer-events-none ${
-                      sample.likedStatus === 1
+                      sample?.likedStatus === 1
                         ? "text-green-400"
                         : "text-muted-foreground"
                     }`}
