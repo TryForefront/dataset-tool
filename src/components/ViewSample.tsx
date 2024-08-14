@@ -47,7 +47,7 @@ const ViewSample = () => {
     addSample,
   } = useSampleStore();
 
-  const { baseUrl, modelString, apiKey } = useAIStore();
+  const { baseUrl, apiKeys, modelString, provider } = useAIStore();
 
   const currentSample: any = useMemo(() => {
     if (!samples) return {};
@@ -264,11 +264,12 @@ const ViewSample = () => {
             className="h-7 gap-1 text-sm"
             onClick={async () => {
               const newSample = await generateSimilarSample(
+                provider,
                 currentSample! as Sample,
                 baseUrl,
                 modelString,
                 0.7,
-                apiKey
+                apiKeys[provider]
               );
 
               addSample(newSample);

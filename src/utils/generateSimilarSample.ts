@@ -8,7 +8,7 @@ Here is the example:
 
 ${sampleString}
 
-You you will output a JSON array of messages based upon the instructions above. You must output only a JSON object with the key "messages" and the value being an array of messages.
+You will generate a similar example using the function provided. The function is called 'generateSimilarMessages' and it takes one argument, which is a stringified JSON object with the key 'messages'. It should parse this JSON string and use the 'messages' array as a reference to generate a new array of messages. Each message in the new array should be an object with 'role' and 'content' properties. Ensure that the generated messages are similar to the example provided in the input, but distinct and diverse, enhancing the overall quality of the dataset.
 `.trim();
 
 // export default async function generateSimilarSample(
@@ -57,37 +57,61 @@ You you will output a JSON array of messages based upon the instructions above. 
 //   return out;
 // }
 
-import { createOpenAI } from "@ai-sdk/openai";
-import { generateText } from "ai";
+import { generateObject } from "ai";
+import { z } from "zod";
+
+const schema = z.object({
+  messages: z.array(
+    z.object({
+      role: z.string(),
+      content: z.string(),
+    })
+  ),
+});
+
+import providers from "@/constants/providers";
 
 export default async function generateSimilarSample(
+  provider: string,
   sample: Sample,
   baseUrl: string,
   model: string,
   temperature: number,
   apiKey: string
 ) {
-  const openai = createOpenAI({
-    // custom settings, e.g.
-    apiKey,
-    compatibility: "strict", // strict mode, enable when using the OpenAI API
-  });
-  const { text } = await generateText({
-    model: openai(model),
-    prompt: prompt(JSON.stringify(prompt(JSON.stringify(sample.messages)))),
-  });
-  console.log(text);
+  try {
+    const constructor: any = providers.find(
+      (p) => p.key == provider
+    )?.constructor;
 
-  const json = JSON.parse(text.match(/```json\n([\s\S]*?)\n```/)?.[1] ?? text);
-  const out: Sample = {
-    messages: json.messages,
-    id: crypto.randomUUID(),
-    likedStatus: 0,
-    labels: ["ai_generated"],
-    versions: [],
-  };
+    if (!constructor) {
+      throw new Error(`Provider ${provider} not found`);
+    }
+    const client = constructor({
+      baseUrl,
+      apiKey,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
 
-  console.log(out);
+    const { object } = await generateObject({
+      model: client(model),
+      schema,
+      prompt: prompt(JSON.stringify(prompt(JSON.stringify(sample.messages)))),
+    });
 
-  return out;
+    const out: Sample = {
+      messages: object.messages,
+      id: crypto.randomUUID(),
+      likedStatus: 0,
+      labels: ["ai_generated"],
+      versions: [],
+    };
+
+    return out;
+  } catch (e) {
+    console.error(JSON.stringify(e));
+  }
 }

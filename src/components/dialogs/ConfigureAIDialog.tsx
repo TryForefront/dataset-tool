@@ -36,9 +36,8 @@ const ConfigureAIDialog = () => {
   const {
     provider,
     baseUrl,
-    apiKey,
+    apiKeys,
     modelString,
-    setProvider,
     setBaseUrl,
     setApiKey,
     setModelString,
@@ -92,10 +91,11 @@ const ConfigureAIDialog = () => {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="max-h-[300px] overflow-auto">
                 {providers
                   .find((p) => p.key === provider)
-                  ?.models.map((model) => (
+                  ?.models?.sort((a, b) => a.localeCompare(b))
+                  .map((model) => (
                     <DropdownMenuItem
                       key={model}
                       onSelect={() => setModelString(model)}
@@ -120,8 +120,8 @@ const ConfigureAIDialog = () => {
           <Input
             id="apiKey"
             className="col-span-3"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
+            value={apiKeys[provider] || ""}
+            onChange={(e) => setApiKey(provider, e.target.value)}
           />
         </div>
       </div>
@@ -144,7 +144,7 @@ const ProviderDropdown = () => {
           <ChevronDown className="h-4 w-4 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-full right-0">
+      <DropdownMenuContent className="w-full right-0 ">
         <DropdownMenuGroup>
           {providers.map((provider) => (
             <DropdownMenuItem
