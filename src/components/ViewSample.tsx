@@ -204,11 +204,11 @@ const ViewSample = () => {
 
   return (
     <div className="h-full w-full items-start gap-4 md:gap-8 overflow-hidden">
-      <CardHeader className=" px-4 sm:px-6 py-2 flex flex-row items-center justify-between border-b">
-        <div className="flex flex-col ">
-          <div className="flex items-center gap-6">
+      <CardHeader className="px-2 sm:px-4 md:px-6 py-2 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b">
+        <div className="flex flex-col w-full sm:w-auto mb-2 sm:mb-0">
+          <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-4">
             <div className="flex gap-2 items-center">
-              <div className="w-[120px]">
+              <div className="w-[75px] ">
                 <Tooltip>
                   <TooltipTrigger>
                     <ArrowLeft
@@ -222,12 +222,11 @@ const ViewSample = () => {
                 </Tooltip>
               </div>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger className="flex items-center gap-2">
                   <Checkbox
                     checked={selectedSampleIds?.includes(currentSample.id)}
                     onCheckedChange={(e) => {
                       console.log("click");
-
                       selectSampleId(currentSample.id as string);
                     }}
                   />
@@ -236,12 +235,11 @@ const ViewSample = () => {
                   <p>Toggle selection</p>
                 </TooltipContent>
               </Tooltip>
-
-              <h2 className="text-base font-medium">
+              <h2 className="text-sm sm:text-base font-medium">
                 Sample {samples?.findIndex((s) => s?.id === viewSampleId) + 1}
               </h2>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               <Tooltip>
                 <TooltipTrigger>
                   <ThumbsDown
@@ -266,7 +264,7 @@ const ViewSample = () => {
                         : "text-muted-foreground hover:text-green-400"
                     }`}
                     onClick={handleLike}
-                  />{" "}
+                  />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Mark sample as liked</p>
@@ -282,9 +280,12 @@ const ViewSample = () => {
             </div>
           </div>
         </div>
-        <div className="h-7 flex items-center gap-2" style={{ margin: 0 }}>
-          <div className="flex items-center gap-2 mr-4 select-none">
-            <span className="text-sm pointer-events-none">
+        <div
+          className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-between sm:justify-start "
+          style={{ margin: 0 }}
+        >
+          <div className="flex items-center gap-2 mr-2 sm:mr-4 select-none">
+            <span className="text-xs sm:text-sm pointer-events-none">
               <span className="text-foreground">
                 {samples?.findIndex((s) => s?.id === viewSampleId) + 1}
               </span>
@@ -293,13 +294,12 @@ const ViewSample = () => {
                 / {samples?.length}
               </span>
             </span>
-
             <Tooltip>
               <TooltipTrigger>
                 <ChevronUp
                   onClick={handleIncrementViewSampleId}
                   className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer"
-                />{" "}
+                />
               </TooltipTrigger>
               <TooltipContent>
                 <p>View next sample</p>
@@ -317,81 +317,92 @@ const ViewSample = () => {
               </TooltipContent>
             </Tooltip>
           </div>
-          {edit ? (
-            <>
+          <div className="flex items-center gap-2">
+            {edit ? (
+              <>
+                <Button
+                  onClick={handleCancel}
+                  size="sm"
+                  variant="outline"
+                  className="h-7 gap-1 text-xs sm:text-sm text-red-400 border-red-400 hover:bg-muted"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only">Cancel</span>
+                </Button>
+                <Button
+                  onClick={handleSave}
+                  size="sm"
+                  variant="outline"
+                  className="h-7 gap-1 text-xs sm:text-sm text-green-400 border-green-400 hover:bg-muted"
+                >
+                  <Check className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only">Save</span>
+                </Button>
+              </>
+            ) : (
               <Button
-                onClick={handleCancel}
+                onClick={() => setEdit(true)}
                 size="sm"
                 variant="outline"
-                className="h-7 gap-1 text-sm text-red-400 border-red-400 hover:bg-muted"
+                className="h-7 gap-1 text-xs sm:text-sm"
               >
-                <X className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only">Cancel</span>
+                <Edit className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only">Edit</span>
               </Button>
-              <Button
-                onClick={handleSave}
-                size="sm"
-                variant="outline"
-                className="h-7 gap-1 text-sm text-green-400 border-green-400 hover:bg-muted"
-              >
-                <Check className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only">Save</span>
-              </Button>
-            </>
-          ) : (
-            <Button
-              onClick={() => setEdit(true)}
-              size="sm"
-              variant="outline"
-              className="h-7 gap-1 text-sm"
+            )}
+            <Dialog
+              open={rewriteOpen}
+              onOpenChange={(open) => handleOpenChange(open, setRewriteOpen)}
             >
-              <Edit className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only">Edit</span>
-            </Button>
-          )}
-          <Dialog
-            open={rewriteOpen}
-            onOpenChange={(open) => handleOpenChange(open, setRewriteOpen)}
-          >
-            <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
-                <WandSparkles className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only">Rewrite with AI</span>
-              </Button>
-            </DialogTrigger>
-            <RewriteDialog open={rewriteOpen} />
-          </Dialog>
-
-          <Dialog
-            open={generateOpen}
-            onOpenChange={(open) => handleOpenChange(open, setGenerateOpen)}
-          >
-            <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only">
-                  Generate more like this
-                </span>
-              </Button>
-            </DialogTrigger>
-            <GenerateMoreDialog open={generateOpen} />
-          </Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-7 gap-1 text-xs sm:text-sm"
+                >
+                  <WandSparkles className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only">
+                    Rewrite with AI
+                  </span>
+                </Button>
+              </DialogTrigger>
+              <RewriteDialog open={rewriteOpen} />
+            </Dialog>
+            <Dialog
+              open={generateOpen}
+              onOpenChange={(open) => handleOpenChange(open, setGenerateOpen)}
+            >
+              <DialogTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-7 gap-1 text-xs sm:text-sm"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only">
+                    Generate more like this
+                  </span>
+                </Button>
+              </DialogTrigger>
+              <GenerateMoreDialog open={generateOpen} />
+            </Dialog>
+          </div>
         </div>
       </CardHeader>
 
-      <div className="h-full  flex-grow ">
-        <div className="w-full h-full overflow-auto px-4 pb-24">
+      <div className="h-full flex-grow">
+        <div className="w-full h-full overflow-auto px-2 sm:px-4 pb-24">
           <Table className="w-full">
             <TableBody>
               {messages?.map((message: Message, index: number) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium text-muted-foreground font-light p-2 py-4 w-[120px] align-top whitespace-nowrap">
+                <TableRow key={index} className="flex flex-col sm:table-row">
+                  <TableCell className="font-medium text-muted-foreground font-light p-2 py-4 w-full sm:w-[120px] align-top whitespace-nowrap">
                     {capitalize(message.role)}
                   </TableCell>
-                  <TableCell className="py-4">
+                  <TableCell className="py-4 w-full">
                     {edit ? (
                       <textarea
-                        className="w-full h-auto p-2 border rounded"
+                        className="w-full h-auto p-2 border rounded text-sm sm:text-base"
                         value={message.content}
                         style={{ height: "auto", minHeight: "100px" }}
                         onFocus={(e) =>
@@ -403,7 +414,7 @@ const ViewSample = () => {
                         }}
                       />
                     ) : (
-                      <div className="flex gap-1 flex-wrap align-top whitespace-pre-line">
+                      <div className="flex gap-1 flex-wrap align-top whitespace-pre-line text-sm sm:text-base">
                         {message.content}
                       </div>
                     )}

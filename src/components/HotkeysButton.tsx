@@ -12,7 +12,7 @@ const HotkeysButton = () => {
     <Button
       size="sm"
       variant="outline"
-      className="h-7 gap-1 text-sm"
+      className="h-7 gap-1 text-sm hidden md:inline-flex"
       onClick={toggleHotkeys}
     >
       <CircleHelp className="h-3.5 w-3.5" />
