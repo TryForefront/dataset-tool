@@ -21,7 +21,8 @@ import { Input } from "@/components/ui/input";
 const RewriteDialog = () => {
   const { provider, baseUrl, apiKeys, modelString } = useAIStore();
 
-  const { samples, viewSampleId, addSample } = useSampleStore();
+  const { samples, viewSampleId, addSample, updateSampleMessages } =
+    useSampleStore();
 
   const [page, setPage] = useState(0);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -41,29 +42,29 @@ const RewriteDialog = () => {
 
   async function handleRewrite() {
     try {
-      //   setResult(undefined);
-      //   setAddedSample(false);
-      //   setIsGenerating(true);
-      //   const currentSample = samples?.find((s) => s.id === viewSampleId);
-      //   console.log(currentSample);
-      //   if (!currentSample) return;
-      //   const newSample = await generateSimilarSample(
-      //     provider,
-      //     currentSample as Sample,
-      //     baseUrl,
-      //     modelString,
-      //     0.7,
-      //     apiKeys[provider]
-      //   );
-      //   if (newSample) {
-      //     setResult(newSample);
-      //   }
-      //   setIsGenerating(false);
-      //   setResult(newSample);
+      setResult(undefined);
+      setAddedSample(false);
+      setIsGenerating(true);
+      const currentSample = samples?.find((s) => s.id === viewSampleId);
+      console.log(currentSample);
+      if (!currentSample) return;
+      // const newSample = await generateSimilarSample(
+      //   provider,
+      //   currentSample as Sample,
+      //   baseUrl,
+      //   modelString,
+      //   0.7,
+      //   apiKeys[provider]
+      // );
+      if (newSample) {
+        setResult(newSample);
+      }
+      setIsGenerating(false);
+      setResult(newSample);
     } catch (e) {
-      //   setError(
-      //     "Something went wrong. Please try again later or use a different model."
-      //   );
+      setError(
+        "Something went wrong. Please try again later or use a different model."
+      );
     }
   }
 
@@ -155,8 +156,8 @@ const RewriteDialog = () => {
                   !provider || !baseUrl || !apiKeys[provider] || !modelString
                 }
                 onClick={() => {
-                  if (result) {
-                    addSample(result);
+                  if (result && viewSampleId) {
+                    updateSampleMessages(viewSampleId, result.messages);
                   }
                   setAddedSample(true);
                 }}
