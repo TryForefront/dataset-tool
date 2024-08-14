@@ -47,7 +47,7 @@ const ViewSample = () => {
     addSample,
   } = useSampleStore();
 
-  const { aiConfig } = useAIStore();
+  const { baseUrl, modelString, apiKey } = useAIStore();
 
   const currentSample = useMemo(() => {
     if (!samples) return {};
@@ -263,10 +263,10 @@ const ViewSample = () => {
             onClick={async () => {
               const newSample = await generateSimilarSample(
                 currentSample! as Sample,
-                aiConfig.baseUrl,
-                aiConfig.modelString,
+                baseUrl,
+                modelString,
                 0.7,
-                aiConfig.apiKey
+                apiKey
               );
 
               addSample(newSample);

@@ -9,6 +9,19 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/ThemeToggle";
 import { useTheme } from "next-themes";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import ConfigureAIDialog from "@/components/dialogs/ConfigureAIDialog";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -69,16 +82,22 @@ export default function RootLayout({
                       <CircleHelp className="h-3.5 w-3.5" />
                       <span className="sr-only sm:not-sr-only">Help</span>
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-7 gap-1 text-sm"
-                    >
-                      <Settings2 className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only">
-                        Configure AI
-                      </span>
-                    </Button>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 gap-1 text-sm"
+                        >
+                          <Settings2 className="h-3.5 w-3.5" />
+                          <span className="sr-only sm:not-sr-only">
+                            Configure AI
+                          </span>
+                        </Button>
+                      </DialogTrigger>
+                      <ConfigureAIDialog />
+                    </Dialog>
                     <ModeToggle />
                   </div>
                 </header>

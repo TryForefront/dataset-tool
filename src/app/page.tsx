@@ -1,17 +1,5 @@
 "use client";
-import { ListFilter, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { CardHeader } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
-import DatasetTable from "@/components/DatasetTable";
 import EmptyStateCard from "@/components/EmptyStateCard";
 import { useSampleStore } from "@/store";
 import ViewSample from "@/components/ViewSample";
