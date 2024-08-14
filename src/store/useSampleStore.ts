@@ -38,6 +38,9 @@ interface SampleState {
   samples: Sample[];
   setSamples: (samples: Sample[]) => void;
 
+  filter: string;
+  setFilter: (filter: string) => void;
+
   hoverIndex: number;
   setHoverIndex: (index: number) => void;
 
@@ -68,6 +71,9 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
     (set) => ({
       samples: [],
       setSamples: (samples) => set({ samples }),
+
+      filter: "all",
+      setFilter: (filter) => set({ filter }),
 
       hoverIndex: -1,
       setHoverIndex: (index) => set({ hoverIndex: index }),

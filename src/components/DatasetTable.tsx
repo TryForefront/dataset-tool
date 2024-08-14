@@ -90,21 +90,21 @@ const DatasetTable = ({ samples }) => {
               <TableCell>
                 <div className="flex justify-end space-x-1 gap-1">
                   <ThumbsDown
-                    className={`h-4 w-4 cursor-pointer ${
+                    className={`h-4 w-4 pointer-events-none ${
                       sample.likedStatus === -1
-                        ? "text-red-500"
-                        : "text-muted-foreground hover:text-red-500"
+                        ? "text-red-400"
+                        : "text-muted-foreground"
                     }`}
                   />
                   <ThumbsUp
-                    className={`h-4 w-4 cursor-pointer ${
+                    className={`h-4 w-4 pointer-events-none ${
                       sample.likedStatus === 1
-                        ? "text-green-500"
-                        : "text-muted-foreground hover:text-green-500"
+                        ? "text-green-400"
+                        : "text-muted-foreground"
                     }`}
                   />
-                  <CopyPlus className="h-4 w-4 text-muted-foreground hover:text-black cursor-pointer" />
-                  <Trash className="h-4 w-4 text-muted-foreground hover:text-black cursor-pointer" />
+                  {/* <CopyPlus className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+                  <Trash className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" /> */}
                 </div>
               </TableCell>
             </TableRow>

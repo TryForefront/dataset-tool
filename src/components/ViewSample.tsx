@@ -160,8 +160,8 @@ const ViewSample = () => {
                   <ThumbsDown
                     className={`h-4 w-4 cursor-pointer ${
                       currentSample?.likedStatus === -1
-                        ? "text-red-500"
-                        : "text-muted-foreground hover:text-red-500"
+                        ? "text-red-400"
+                        : "text-muted-foreground hover:text-red-400"
                     }`}
                     onClick={handleDislike}
                   />
@@ -175,8 +175,8 @@ const ViewSample = () => {
                   <ThumbsUp
                     className={`h-4 w-4 cursor-pointer ${
                       currentSample?.likedStatus === 1
-                        ? "text-green-500"
-                        : "text-muted-foreground hover:text-green-500"
+                        ? "text-green-400"
+                        : "text-muted-foreground hover:text-green-400"
                     }`}
                     onClick={handleLike}
                   />{" "}
@@ -226,7 +226,7 @@ const ViewSample = () => {
                 onClick={handleCancel}
                 size="sm"
                 variant="outline"
-                className="h-7 gap-1 text-sm text-red-500 border-red-500 hover:bg-muted"
+                className="h-7 gap-1 text-sm text-red-400 border-red-400 hover:bg-muted"
               >
                 <X className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only">Cancel</span>
@@ -235,7 +235,7 @@ const ViewSample = () => {
                 onClick={handleSave}
                 size="sm"
                 variant="outline"
-                className="h-7 gap-1 text-sm text-green-500 border-green-500 hover:bg-muted"
+                className="h-7 gap-1 text-sm text-green-400 border-green-400 hover:bg-muted"
               >
                 <Check className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only">Save</span>
