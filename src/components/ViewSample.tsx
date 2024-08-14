@@ -31,11 +31,12 @@ import {
 
 import { CardHeader } from "@/components/ui/card";
 
-import { useSampleStore } from "@/store";
+import { useAIStore, useSampleStore } from "@/store";
 import { useMemo, useState } from "react";
 import { Sample, Message } from "@/store/useSampleStore";
 import capitalize from "@/utils/capitalize";
 import useHotkey from "@/hooks/useHotkey";
+import generateSimilarSample from "@/utils/generateSimilarSample";
 
 const ViewSample = () => {
   const [edit, setEdit] = useState(false);
@@ -47,7 +48,10 @@ const ViewSample = () => {
     dislikeSampleById,
     resetViewSampleId,
     resetSampleLikeStatus,
+    addSample,
   } = useSampleStore();
+
+  const { aiConfig } = useAIStore();
 
   const currentSample = useMemo(() => {
     if (!samples) return {};
@@ -199,7 +203,22 @@ const ViewSample = () => {
             <WandSparkles className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only">Rewrite with AI</span>
           </Button>
-          <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 gap-1 text-sm"
+            onClick={async () => {
+              const newSample = await generateSimilarSample(
+                currentSample! as Sample,
+                aiConfig.baseUrl,
+                aiConfig.modelString,
+                0.7,
+                aiConfig.apiKey
+              );
+
+              addSample(newSample);
+            }}
+          >
             <Sparkles className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only">
               Generate more like this
