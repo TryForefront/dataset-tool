@@ -52,6 +52,35 @@ export default async function generateSimilarSample(
   if (!constructor) {
     throw new Error(`Provider ${provider} not found`);
   }
+
+  try {
+    const client = constructor({
+      baseUrl,
+      apiKey,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+
+    const { object } = await generateObject({
+      model: client(model),
+      schema,
+      prompt: prompt(JSON.stringify(sample.messages)),
+    });
+
+    const out: Sample = {
+      messages: object.messages,
+      id: crypto.randomUUID(),
+      likedStatus: 0,
+      labels: ["ai_generated"],
+      versions: [],
+    };
+
+    return out;
+  } catch (e) {
+    console.error(JSON.stringify(e));
+  }
   const client = constructor({
     baseUrl,
     apiKey,

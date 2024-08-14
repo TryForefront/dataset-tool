@@ -1,6 +1,6 @@
 import { Sample } from "@/store/useSampleStore";
 
-const prompt = (sampleString: string) =>
+const prompt = (sampleString: string, instructions: string) =>
   `
 Your job is to take the following example from a dataset some instructions from the user, and edit the example to fit the edit instructions. You will output the full edited example, identical to the original except in the way the example is edited as described by the instructions.
 
@@ -9,6 +9,9 @@ Here is the example:
 ${sampleString}
 
 You will generate an example using the function provided. The function is called 'modifySample' and it takes one argument, which is a stringified JSON object with the key 'messages'. It should parse this JSON string and use the 'messages' array as a reference to generate a new array of messages. Each message in the new array should be an object with 'role' and 'content' properties. Ensure that the generated messages are identical to the original sample except for the edits described by the instructions. It should be a diverse and high quality sample that will improve the overall quality of the dataset.
+
+Here are the instructions:
+${instructions}
 `.trim();
 
 // export default async function generateSimilarSample(
@@ -74,6 +77,7 @@ import providers from "@/constants/providers";
 export default async function generateSimilarSample(
   provider: string,
   sample: Sample,
+  instructions: string,
   baseUrl: string,
   model: string,
   temperature: number,
@@ -99,7 +103,7 @@ export default async function generateSimilarSample(
     const { object } = await generateObject({
       model: client(model),
       schema,
-      prompt: prompt(JSON.stringify(prompt(JSON.stringify(sample.messages)))),
+      prompt: prompt(JSON.stringify(sample.messages, null, 2), instructions),
     });
 
     const out: Sample = {
