@@ -1,8 +1,8 @@
 import { useEffect, useCallback } from "react";
 
-const useHotkey = (key, callback, deps = []) => {
+const useHotkey = (key: string, callback: Function, deps = []) => {
   const handleKeyPress = useCallback(
-    (event) => {
+    (event: any) => {
       if (event.key === key) {
         callback(event);
       }

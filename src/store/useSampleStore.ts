@@ -49,19 +49,19 @@ interface SampleState {
   resetViewSampleId: () => void;
 
   selectedSampleIds?: string[];
-  selectSampleId?: (sampleId: string[]) => void;
+  selectSampleId?: (sampleId: string) => void;
 
   addSample: (sample: Sample) => void;
   updateSampleMessages: (sampleId: string, messages: Message[]) => void;
-  duplicateSampleById: (sampleId: string) => void;
+  // duplicateSampleById: (sampleId: string) => void;
   removeSampleById: (sampleId: string) => void;
 
   likeSampleById: (sampleId: string) => void;
   dislikeSampleById: (sampleId: string) => void;
   resetSampleLikeStatus: (sampleId: string) => void;
 
-  addLabelToSampleById: (sampleId: string, label: string) => void;
-  removeLabelFromSampleById: (sampleId: string, label: string) => void;
+  // addLabelToSampleById: (sampleId: string, label: string) => void;
+  // removeLabelFromSampleById: (sampleId: string, label: string) => void;
 }
 
 // import SAMPLE_DATA from "../constants/SAMPLE_DATA";
@@ -86,53 +86,53 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
         set((state) => ({ samples: [...state.samples, sample] })),
       selectedSampleIds: [],
       selectSampleId: (sampleId) =>
-        set((state) => {
+        set((state: any) => {
           const currentSelectedIds = state.selectedSampleIds || [];
           const updatedSelectedIds = currentSelectedIds.includes(sampleId)
-            ? currentSelectedIds.filter((id) => id !== sampleId)
+            ? currentSelectedIds.filter((id: string) => id !== sampleId)
             : [...currentSelectedIds, sampleId];
           return { selectedSampleIds: updatedSelectedIds };
         }),
       updateSampleMessages: (sampleId, messages) =>
-        set((state) => {
-          const sample = state.samples.find((s) => s.id === sampleId);
+        set((state: any) => {
+          const sample = state.samples.find((s: Sample) => s.id === sampleId);
           if (!sample) return;
           return {
             ...state,
-            samples: state.samples.map((s) =>
+            samples: state.samples.map((s: Sample) =>
               s.id === sampleId ? { ...s, messages } : s
             ),
           };
         }),
-      duplicateSampleById: (sampleId) =>
-        set((state) => {
-          const sample = state.samples.find((s) => s.id === sampleId);
-          if (!sample) return;
-          set({
-            samples: [...state.samples, { ...sample, id: `${sample.id}_copy` }],
-          });
-        }),
+      // duplicateSampleById: (sampleId) =>
+      //   set((state) => {
+      //     const sample = state.samples.find((s) => s.id === sampleId);
+      //     if (!sample) return;
+      //     set({
+      //       samples: [...state.samples, { ...sample, id: `${sample.id}_copy` }],
+      //     });
+      //   }),
       removeSampleById: (sampleId) =>
         set((state) => ({
           samples: state.samples.filter((s) => s.id !== sampleId),
         })),
       likeSampleById: (sampleId) => {
-        set((state) => {
-          const sample = state.samples.find((s) => s.id === sampleId);
+        set((state: any) => {
+          const sample = state.samples.find((s: Sample) => s.id === sampleId);
           if (!sample) return;
           return {
             ...state,
-            samples: state.samples.map((s) =>
+            samples: state.samples.map((s: Sample) =>
               s.id === sampleId ? { ...s, likedStatus: 1 } : s
             ),
           };
         });
       },
       dislikeSampleById: (sampleId) =>
-        set((state) => {
+        set((state: any) => {
           console.log("DISLIKING ACTION");
           console.log(sampleId);
-          const sample = state.samples.find((s) => s.id === sampleId);
+          const sample = state.samples.find((s: Sample) => s.id === sampleId);
           console.log(sample);
           if (!sample) return;
           // set({
@@ -142,45 +142,45 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
           // });
           return {
             ...state,
-            samples: state.samples.map((s) =>
+            samples: state.samples.map((s: Sample) =>
               s.id === sampleId ? { ...s, likedStatus: -1 } : s
             ),
           };
         }),
       resetSampleLikeStatus: (sampleId) =>
-        set((state) => {
-          const sample = state.samples.find((s) => s.id === sampleId);
+        set((state: any) => {
+          const sample = state.samples.find((s: Sample) => s.id === sampleId);
           if (!sample) return;
           return {
             ...state,
-            samples: state.samples.map((s) =>
+            samples: state.samples.map((s: Sample) =>
               s.id === sampleId ? { ...s, likedStatus: 0 } : s
             ),
           };
         }),
 
-      addLabelToSampleById: (sampleId, label) =>
-        set((state) => {
-          const sample = state.samples.find((s) => s.id === sampleId);
-          if (!sample) return;
-          set({
-            samples: state.samples.map((s) =>
-              s.id === sampleId ? { ...s, labels: [...s.labels, label] } : s
-            ),
-          });
-        }),
-      removeLabelFromSampleById: (sampleId, label) =>
-        set((state) => {
-          const sample = state.samples.find((s) => s.id === sampleId);
-          if (!sample) return;
-          set({
-            samples: state.samples.map((s) =>
-              s.id === sampleId
-                ? { ...s, labels: s.labels.filter((l) => l !== label) }
-                : s
-            ),
-          });
-        }),
+      // addLabelToSampleById: (sampleId, label) =>
+      //   set((state) => {
+      //     const sample = state.samples.find((s) => s.id === sampleId);
+      //     if (!sample) return;
+      //     set({
+      //       samples: state.samples.map((s) =>
+      //         s.id === sampleId ? { ...s, labels: [...s.labels, label] } : s
+      //       ),
+      //     });
+      //   }),
+      // removeLabelFromSampleById: (sampleId, label) =>
+      //   set((state: any) => {
+      //     const sample = state.samples.find((s) => s.id === sampleId);
+      //     if (!sample) return;
+      //     set({
+      //       samples: state.samples.map((s) =>
+      //         s.id === sampleId
+      //           ? { ...s, labels: s.labels.filter((l) => l !== label) }
+      //           : s
+      //       ),
+      //     });
+      //   }),
     }),
     {
       name: "samples",

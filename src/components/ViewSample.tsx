@@ -49,7 +49,7 @@ const ViewSample = () => {
 
   const { baseUrl, modelString, apiKey } = useAIStore();
 
-  const currentSample = useMemo(() => {
+  const currentSample: any = useMemo(() => {
     if (!samples) return {};
     return samples?.find((sample) => sample.id === viewSampleId);
   }, [viewSampleId, samples]);
@@ -57,7 +57,7 @@ const ViewSample = () => {
   useEffect(() => {
     console.log("current sampl updated");
     if (currentSample) {
-      setMessages(currentSample.messages);
+      setMessages(currentSample?.messages || []);
     }
   }, [currentSample]);
 
@@ -113,10 +113,12 @@ const ViewSample = () => {
   );
 
   function handleCancel() {
-    const originalMessage = samples.find(
+    const originalMessage: Sample | undefined = samples.find(
       (s) => s.id === viewSampleId
-    )?.messages;
-    setMessages([...originalMessage] || []);
+    );
+    if (!originalMessage) return;
+
+    setMessages([...originalMessage.messages] || []);
     setEdit(false);
   }
 

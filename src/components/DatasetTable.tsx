@@ -8,7 +8,7 @@ import { Sample } from "@/store/useSampleStore";
 import useHotkey from "@/hooks/useHotkey";
 import { useRef } from "react";
 
-const DatasetTable = ({ samples }) => {
+const DatasetTable = ({ samples }: { samples: Sample[] }) => {
   const { hoverIndex, setHoverIndex } = useSampleStore();
 
   useHotkey("Enter", () => {
@@ -16,11 +16,11 @@ const DatasetTable = ({ samples }) => {
       setViewSampleId(samples[hoverIndex].id);
     }
   });
-  const rowRefs = useRef([]);
+  const rowRefs: any = useRef([]);
 
-  const scrollToIndex = (index) => {
+  const scrollToIndex = (index: number) => {
     if (rowRefs.current[index]) {
-      rowRefs.current[index].scrollIntoView({
+      rowRefs.current[index]?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
       });
@@ -66,7 +66,7 @@ const DatasetTable = ({ samples }) => {
         <TableBody>
           {samples.map((sample: Sample, index: number) => (
             <TableRow
-              ref={(el) => (rowRefs.current[index] = el)}
+              ref={(el: any) => (rowRefs.current[index] = el)}
               onClick={() => setViewSampleId(sample.id)}
               onMouseOver={() => setHoverIndex(index)}
               key={sample.id}
