@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { Upload, CircleHelp, Settings2 } from "lucide-react";
+import { Upload, CircleHelp, Settings2, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/ThemeToggle";
@@ -72,9 +72,9 @@ export default function RootLayout({
                           variant="outline"
                           className="h-7 gap-1 text-sm"
                         >
-                          <Upload className="h-3.5 w-3.5" />
+                          <RefreshCw className="h-3.5 w-3.5" />
                           <span className="sr-only sm:not-sr-only">
-                            Upload dataset
+                            Start with new dataset
                           </span>
                         </Button>
                       </DialogTrigger>
@@ -87,7 +87,7 @@ export default function RootLayout({
                       className="h-7 gap-1 text-sm"
                     >
                       <CircleHelp className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only">Help</span>
+                      <span className="sr-only sm:not-sr-only">Hotkeys</span>
                     </Button>
 
                     <ModeToggle />

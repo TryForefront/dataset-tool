@@ -22,11 +22,13 @@ const filterSamples = (samples: Sample[], filterType: string): Sample[] => {
     case "all":
       return samples;
     case "liked":
-      return samples.filter((sample) => sample.likedStatus === 1);
+      return samples.filter((sample) => sample?.likedStatus === 1);
     case "disliked":
-      return samples.filter((sample) => sample.likedStatus === -1);
+      return samples.filter((sample) => sample?.likedStatus === -1);
     case "ai_generated":
-      return samples.filter((sample) => sample.labels.includes("ai_generated"));
+      return samples.filter((sample) =>
+        sample?.labels.includes("ai_generated")
+      );
     // case "label":
     //   return samples.filter((sample) => label && sample.labels.includes(label));
     // case "selected":

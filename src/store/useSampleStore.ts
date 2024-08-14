@@ -95,7 +95,9 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
         }),
       updateSampleMessages: (sampleId, messages) =>
         set((state: any) => {
-          const sample = state.samples.find((s: Sample) => s.id === sampleId);
+          const sample = state?.samples?.find(
+            (s: Sample) => s?.id === sampleId
+          );
           if (!sample) return;
           return {
             ...state,
@@ -118,12 +120,14 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
         })),
       likeSampleById: (sampleId) => {
         set((state: any) => {
-          const sample = state.samples.find((s: Sample) => s.id === sampleId);
+          const sample = state?.samples?.find(
+            (s: Sample) => s?.id === sampleId
+          );
           if (!sample) return;
           return {
             ...state,
-            samples: state.samples.map((s: Sample) =>
-              s.id === sampleId ? { ...s, likedStatus: 1 } : s
+            samples: state?.samples?.map((s: Sample) =>
+              s?.id === sampleId ? { ...s, likedStatus: 1 } : s
             ),
           };
         });
@@ -142,19 +146,21 @@ const useSampleStore = create<SampleState, [["zustand/persist", unknown]]>(
           // });
           return {
             ...state,
-            samples: state.samples.map((s: Sample) =>
-              s.id === sampleId ? { ...s, likedStatus: -1 } : s
+            samples: state?.samples?.map((s: Sample) =>
+              s?.id === sampleId ? { ...s, likedStatus: -1 } : s
             ),
           };
         }),
       resetSampleLikeStatus: (sampleId) =>
         set((state: any) => {
-          const sample = state.samples.find((s: Sample) => s.id === sampleId);
+          const sample = state?.samples?.find(
+            (s: Sample) => s?.id === sampleId
+          );
           if (!sample) return;
           return {
             ...state,
-            samples: state.samples.map((s: Sample) =>
-              s.id === sampleId ? { ...s, likedStatus: 0 } : s
+            samples: state?.samples?.map((s: Sample) =>
+              s?.id === sampleId ? { ...s, likedStatus: 0 } : s
             ),
           };
         }),

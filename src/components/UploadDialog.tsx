@@ -7,6 +7,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,8 @@ import parseDataset from "@/utils/parseDataset";
 import useSamples from "@/store/useSampleStore";
 
 export default function UploadDialog() {
-  const { setSamples } = useSamples();
+  const { setSamples, setViewSampleId } = useSamples();
+
   function onFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
@@ -25,12 +27,13 @@ export default function UploadDialog() {
     <>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Upload dataset to get started.</DialogTitle>
+          <DialogTitle>Are you sure you want to do this</DialogTitle>
           <DialogDescription>
-            Warning! This will replace your current dataset.
+            Warning! This action cannot be undone. Please download your dataset
+            if you want to keep it.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex justify-center items-end h-full">
+        <div className="flex  items-end h-full">
           <input
             type="file"
             accept=".jsonl"
@@ -38,13 +41,21 @@ export default function UploadDialog() {
             id="fileInput"
             onChange={onFileUpload}
           />
-          <Button
-            onClick={() => document?.getElementById("fileInput")?.click()}
-          >
-            Upload Dataset
-          </Button>
         </div>
-        <DialogFooter className="flex justify-center items-center"></DialogFooter>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              onClick={() => {
+                setSamples([]);
+                setViewSampleId(undefined);
+                // document?.getElementById("fileInput")?.click();
+                // document.getElementById("closeDialog")?.click();
+              }}
+            >
+              Clear dataset
+            </Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </>
   );

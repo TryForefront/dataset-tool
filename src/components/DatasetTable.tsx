@@ -110,13 +110,8 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
         <TableBody>
           {displayedSamples?.map((sample: Sample, index: number) => (
             <TableRow
-<<<<<<< HEAD
-              ref={(el: any) => (rowRefs.current[index] = el)}
-              onClick={() => setViewSampleId(sample?.id)}
-=======
               ref={(el: any) => ((rowRefs as any)!.current[index] = el)}
               onClick={() => setViewSampleId(sample.id)}
->>>>>>> a563d4eb235039ee28796bfcae1596dc712809cb
               onMouseOver={() => setHoverIndex(index)}
               key={sample?.id}
               className={`${hoverIndex === index ? "bg-muted" : ""}`}
