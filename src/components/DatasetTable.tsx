@@ -64,8 +64,8 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
   });
 
   const scrollToIndex = (index: number) => {
-    if (rowRefs.current[index]) {
-      rowRefs.current[index]?.scrollIntoView({
+    if ((rowRefs as any)?.current?.[index]) {
+      (rowRefs as any)?.current?.[index]?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
       });
@@ -110,7 +110,7 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
         <TableBody>
           {displayedSamples.map((sample: Sample, index: number) => (
             <TableRow
-              ref={(el: any) => (rowRefs.current[index] = el)}
+              ref={(el: any) => ((rowRefs as any)!.current[index] = el)}
               onClick={() => setViewSampleId(sample.id)}
               onMouseOver={() => setHoverIndex(index)}
               key={sample.id}

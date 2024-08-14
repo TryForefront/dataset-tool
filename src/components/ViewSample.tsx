@@ -55,7 +55,6 @@ const ViewSample = () => {
   }, [viewSampleId, samples]);
 
   useEffect(() => {
-    console.log("current sampl updated");
     if (currentSample) {
       setMessages(currentSample?.messages || []);
     }
@@ -272,7 +271,7 @@ const ViewSample = () => {
                 apiKeys[provider]
               );
 
-              addSample(newSample);
+              addSample(newSample!);
             }}
           >
             <Sparkles className="h-3.5 w-3.5" />
