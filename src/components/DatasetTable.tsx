@@ -14,7 +14,13 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
     initialSamples.slice(0, BATCH_SIZE)
   );
   const [currentIndex, setCurrentIndex] = useState(BATCH_SIZE);
-  const { hoverIndex, setHoverIndex, setViewSampleId } = useSampleStore();
+  const {
+    hoverIndex,
+    setHoverIndex,
+    setViewSampleId,
+    selectSampleId,
+    selectedSampleIds,
+  } = useSampleStore();
   const containerRef = useRef(null);
   const observerRef = useRef(null);
   const rowRefs = useRef({});
@@ -109,6 +115,13 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
     }
   });
 
+  // hotkey x to select hoverindex
+  useHotkey("x", () => {
+    if (hoverIndex > -1) {
+      selectSampleId(displayedSamples[hoverIndex].id as string);
+    }
+  });
+
   return (
     <div ref={containerRef} className="w-full h-full overflow-auto px-4 pb-24">
       <Table className="w-full">
@@ -116,18 +129,30 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
           {displayedSamples?.map((sample: Sample, index: number) => (
             <TableRow
               ref={(el: any) => ((rowRefs as any)!.current[index] = el)}
-              onClick={() => setViewSampleId(sample.id)}
               onMouseOver={() => setHoverIndex(index)}
               key={sample?.id}
               className={`${hoverIndex === index ? "bg-muted" : ""}`}
             >
               <TableCell className="p-2 w-[40px] ">
-                <Checkbox />
+                <Checkbox
+                  checked={selectedSampleIds?.includes(sample.id)}
+                  onCheckedChange={(e) => {
+                    console.log("click");
+
+                    selectSampleId(sample.id as string);
+                  }}
+                />
               </TableCell>
-              <TableCell className="font-medium p-2 w-[100px] whitespace-nowrap">
+              <TableCell
+                onClick={() => setViewSampleId(sample.id)}
+                className="font-medium p-2 w-[100px] whitespace-nowrap"
+              >
                 Sample {index + 1}
               </TableCell>
-              <TableCell className="p-2">
+              <TableCell
+                onClick={() => setViewSampleId(sample.id)}
+                className="p-2"
+              >
                 <div className="flex gap-1 flex-wrap">
                   {sample?.labels?.map((label, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
@@ -136,7 +161,7 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
                   ))}
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell onClick={() => setViewSampleId(sample.id)}>
                 <div className="flex justify-end space-x-1 gap-1">
                   <ThumbsDown
                     className={`h-4 w-4 pointer-events-none ${

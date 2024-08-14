@@ -191,8 +191,8 @@ const ViewSample = () => {
   useHotkey("l", () => !edit && bothModalsClosed && handleLike());
   useHotkey("h", () => !edit && bothModalsClosed && handleDislike());
 
-  useHotkey("g", () => setGenerateOpen(true));
-  useHotkey("r", () => setRewriteOpen(true));
+  useHotkey("g", () => !edit && bothModalsClosed && setGenerateOpen(true));
+  useHotkey("r", () => !edit && bothModalsClosed && setRewriteOpen(true));
 
   return (
     <div className="h-full w-full items-start gap-4 md:gap-8 overflow-hidden">

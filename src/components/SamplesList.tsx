@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -16,42 +17,46 @@ import DatasetTable from "@/components/DatasetTable";
 import { useSampleStore } from "@/store";
 import { Sample } from "@/store/useSampleStore";
 import { useMemo } from "react";
-
-const filterSamples = (samples: Sample[], filterType: string): Sample[] => {
-  switch (filterType) {
-    case "all":
-      return samples;
-    case "liked":
-      return samples.filter((sample) => sample?.likedStatus === 1);
-    case "disliked":
-      return samples.filter((sample) => sample?.likedStatus === -1);
-    case "ai_generated":
-      return samples.filter((sample) =>
-        sample?.labels.includes("ai_generated")
-      );
-    // case "label":
-    //   return samples.filter((sample) => label && sample.labels.includes(label));
-    // case "selected":
-    //   return samples.filter((sample) => selectedIds.includes(sample.id));
-    default:
-      return samples;
-  }
-};
+import downloadDataset from "@/utils/downloadDataset";
 
 const SamplesList = () => {
-  const { samples, filter, setFilter } = useSampleStore();
+  const { samples, filter, setFilter, selectedSampleIds } = useSampleStore();
+
+  const filterSamples = (samples: Sample[], filterType: string): Sample[] => {
+    switch (filterType) {
+      case "all":
+        return samples;
+      case "liked":
+        return samples.filter((sample) => sample?.likedStatus === 1);
+      case "disliked":
+        return samples.filter((sample) => sample?.likedStatus === -1);
+      case "ai_generated":
+        return samples.filter((sample) =>
+          sample?.labels.includes("ai_generated")
+        );
+      case "selected":
+        return samples.filter((sample) =>
+          selectedSampleIds.includes(sample.id)
+        );
+      default:
+        return samples;
+    }
+  };
 
   const filteredSamples = useMemo(
     () => filterSamples(samples, filter),
-    [samples, filter]
+    [samples, filter, selectedSampleIds]
   );
   return (
     <div className="h-full w-full items-start gap-4 md:gap-8 overflow-hidden">
       <CardHeader className=" px-4 sm:px-6 py-2 flex flex-row items-center justify-between border-b">
         <div className="flex flex-col ">
-          <div className="flex items-center gap-2">
-            <h2 className="text-base font-medium">Samples</h2>
-            <span className="text-muted-foreground text-md">{`(${filteredSamples.length})`}</span>
+          <div className="flex items-center gap-4">
+            <div className="flex gap-2 items-center items-end">
+              <h2 className="text-base font-medium">Samples</h2>
+              <span className="text-muted-foreground text-md">{`${filteredSamples.length}`}</span>
+            </div>
+            <span className="text-muted-foreground/[0.7] text-xs">{`(${selectedSampleIds.length} selected)`}</span>
           </div>
         </div>
         <div className="h-7 flex items-center gap-2" style={{ margin: 0 }}>
@@ -99,18 +104,36 @@ const SamplesList = () => {
               >
                 AI Generated
               </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={filter === "none"}
-                onCheckedChange={() => setFilter("none")}
-              >
-                None
-              </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
-            <Download className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only">Download</span>
-          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
+                <Download className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only">Download</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => downloadDataset(filteredSamples)}
+              >
+                {`Download current view (${filteredSamples.length})`}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  downloadDataset(
+                    samples.filter((sample) =>
+                      selectedSampleIds.includes(sample.id)
+                    )
+                  )
+                }
+              >
+                {`Download selected (${selectedSampleIds.length})`}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
 

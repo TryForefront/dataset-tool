@@ -48,8 +48,8 @@ interface SampleState {
   setViewSampleId: (sampleId: string | undefined) => void;
   resetViewSampleId: () => void;
 
-  selectedSampleIds?: string[];
-  selectSampleId?: (sampleId: string) => void;
+  selectedSampleIds: string[];
+  selectSampleId: (sampleId: string) => void;
 
   addSample: (sample: Sample) => void;
   updateSampleMessages: (sampleId: string, messages: Message[]) => void;
