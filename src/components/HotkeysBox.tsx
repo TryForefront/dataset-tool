@@ -12,7 +12,9 @@ import {
 } from "@/components/ui/command";
 
 import { useSampleStore } from "@/store";
-import { CreditCard } from "lucide-react";
+
+const Kbd = ({ children }: any) => <kbd className="?">{children}</kbd>;
+
 const HotkeysBox = () => {
   const { hoverIndex, viewSampleId, showHotkeys, toggleHotkeys } =
     useSampleStore();
@@ -27,19 +29,34 @@ const HotkeysBox = () => {
           <CommandGroup heading="Navigation">
             <CommandItem>
               <span>Move up</span>
-              <CommandShortcut>j / ↑</CommandShortcut>
+              <CommandShortcut>
+                <Kbd>j</Kbd> / <Kbd>↑</Kbd>
+              </CommandShortcut>
             </CommandItem>
             <CommandItem>
               <span>Move down / up</span>
-              <CommandShortcut>k / ↓</CommandShortcut>
+              <CommandShortcut>
+                <Kbd>k</Kbd> / <Kbd>↓</Kbd>
+              </CommandShortcut>
             </CommandItem>
             <CommandItem>
+              <span>Toggle selection</span>
+              <CommandShortcut>
+                <Kbd>x</Kbd>
+              </CommandShortcut>
+            </CommandItem>
+
+            <CommandItem>
               <span>View sample</span>
-              <CommandShortcut>Enter</CommandShortcut>
+              <CommandShortcut>
+                <Kbd>Enter</Kbd>
+              </CommandShortcut>
             </CommandItem>
             <CommandItem>
               <span>Toggle hotkey pop-up</span>
-              <CommandShortcut>?</CommandShortcut>
+              <CommandShortcut>
+                <Kbd>?</Kbd>
+              </CommandShortcut>
             </CommandItem>
           </CommandGroup>
         ) : (
@@ -47,42 +64,67 @@ const HotkeysBox = () => {
             <CommandGroup heading="Navigation">
               <CommandItem>
                 <span>Back to dataset list</span>
-                <CommandShortcut>Esc</CommandShortcut>
+                <CommandShortcut>
+                  <Kbd>Esc</Kbd>
+                </CommandShortcut>
               </CommandItem>
               <CommandItem>
                 <span>Previous sample</span>
-                <CommandShortcut>j / ↑</CommandShortcut>
+                <CommandShortcut>
+                  <Kbd>j</Kbd> / <Kbd>↑</Kbd>
+                </CommandShortcut>
               </CommandItem>
               <CommandItem>
                 <span>Next sample</span>
-                <CommandShortcut>k / ↓</CommandShortcut>
+                <CommandShortcut>
+                  <Kbd>k</Kbd> / <Kbd>↓</Kbd>
+                </CommandShortcut>
               </CommandItem>
               <CommandItem>
                 <span>Toggle hotkey pop-up</span>
-                <CommandShortcut>?</CommandShortcut>
+                <CommandShortcut>
+                  <Kbd>?</Kbd>
+                </CommandShortcut>
               </CommandItem>
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup heading="Actions">
               <CommandItem>
+                <CommandItem>
+                  <span>Toggle selection</span>
+                  <CommandShortcut>
+                    <Kbd>x</Kbd>
+                  </CommandShortcut>
+                </CommandItem>
+
                 <span>Like sample</span>
-                <CommandShortcut>l</CommandShortcut>
+                <CommandShortcut>
+                  <Kbd>l</Kbd>
+                </CommandShortcut>
               </CommandItem>
               <CommandItem>
                 <span>Dislike sample</span>
-                <CommandShortcut>h</CommandShortcut>
+                <CommandShortcut>
+                  <Kbd>h</Kbd>
+                </CommandShortcut>
               </CommandItem>
               <CommandItem>
                 <span>Toggle edit mode</span>
-                <CommandShortcut>e</CommandShortcut>
+                <CommandShortcut>
+                  <Kbd>e</Kbd>
+                </CommandShortcut>
               </CommandItem>
               <CommandItem>
                 <span>Generate more samples with AI</span>
-                <CommandShortcut>g</CommandShortcut>
+                <CommandShortcut>
+                  <Kbd>g</Kbd>
+                </CommandShortcut>
               </CommandItem>
               <CommandItem>
                 <span>Rewrite with AI</span>
-                <CommandShortcut>r</CommandShortcut>
+                <CommandShortcut>
+                  <Kbd>r</Kbd>
+                </CommandShortcut>
               </CommandItem>
             </CommandGroup>
           </>
