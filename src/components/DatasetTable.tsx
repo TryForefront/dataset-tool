@@ -26,7 +26,10 @@ const DatasetTable = ({ samples: initialSamples }: any) => {
       currentIndex,
       currentIndex + BATCH_SIZE
     );
-    setDisplayedSamples((prevSamples) => [...prevSamples, ...nextBatch]);
+    setDisplayedSamples((prevSamples: Sample[]) => [
+      ...prevSamples,
+      ...nextBatch,
+    ]);
     setCurrentIndex((prevIndex) => prevIndex + BATCH_SIZE);
   }, [currentIndex, initialSamples]);
 
