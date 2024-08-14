@@ -19,13 +19,12 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
 import { CardHeader } from "@/components/ui/card";
 
-import { useAIStore, useSampleStore } from "@/store";
+import { useSampleStore } from "@/store";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sample, Message } from "@/store/useSampleStore";
 import capitalize from "@/utils/capitalize";
@@ -33,7 +32,7 @@ import useHotkey from "@/hooks/useHotkey";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import RewriteDialog from "./dialogs/RewriteDialog";
 import GenerateMoreDialog from "./dialogs/GenerateMoreDialog";
-import { Function } from "ai";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ViewSample = () => {
   const [edit, setEdit] = useState(false);
@@ -48,6 +47,8 @@ const ViewSample = () => {
     resetViewSampleId,
     updateSampleMessages,
     resetSampleLikeStatus,
+    selectedSampleIds,
+    selectSampleId,
     addSample,
   } = useSampleStore();
 
@@ -194,23 +195,40 @@ const ViewSample = () => {
   useHotkey("g", () => !edit && bothModalsClosed && setGenerateOpen(true));
   useHotkey("r", () => !edit && bothModalsClosed && setRewriteOpen(true));
 
+  // hotkey x to select
+  useHotkey("x", () => {
+    if (currentSample) {
+      selectSampleId(currentSample.id);
+    }
+  });
+
   return (
     <div className="h-full w-full items-start gap-4 md:gap-8 overflow-hidden">
       <CardHeader className=" px-4 sm:px-6 py-2 flex flex-row items-center justify-between border-b">
         <div className="flex flex-col ">
           <div className="flex items-center gap-6">
             <div className="flex gap-2 items-center">
-              <Tooltip>
-                <TooltipTrigger>
-                  <ArrowLeft
-                    onClick={resetViewSampleId}
-                    className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground"
-                  />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Back to samples</p>
-                </TooltipContent>
-              </Tooltip>
+              <div className="w-[120px]">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <ArrowLeft
+                      onClick={resetViewSampleId}
+                      className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Back to samples</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <Checkbox
+                checked={selectedSampleIds?.includes(currentSample.id)}
+                onCheckedChange={(e) => {
+                  console.log("click");
+
+                  selectSampleId(currentSample.id as string);
+                }}
+              />
 
               <h2 className="text-base font-medium">
                 Sample {samples?.findIndex((s) => s?.id === viewSampleId) + 1}
